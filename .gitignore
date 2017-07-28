@@ -1,8 +1,6 @@
 # OSX Noise
 .DS_Store
 
-# Carthage
-Carthage/
 
 # XCode (and ancestors) per-user config (very noisy, and not relevant)
 *.mode1
