@@ -56,6 +56,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
         super.viewDidLoad()
     }
     
+    /// MARK: Secure Code Entry
     public func secureCodeEntryFailed(context: SecureCodeEntryContext) {
         dismissPinEntry(withCompletion: nil)
     }
@@ -64,30 +65,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
         dismissPinEntry(withCompletion: nil)
     }
 
-    /// MARK: Helpers
-    private func configureTableView()
-    {
-        tableView.rowHeight = 45
-        tableView.sectionFooterHeight = 0
-        tableView.isScrollEnabled = true
-        tableView.showsVerticalScrollIndicator = false
-        tableView.bounces = true
-        tableView.backgroundColor = pwStyle.tableViewBackgroundColor
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    private func setupTableViewConstraints()
-    {
-        let constraint = PWConstraint()
-        PWConstraint.disableAutoresize(forView: tableView)
-        constraint.addConstraint( tableView.leftAnchor.constraint(equalTo: view.leftAnchor))
-        constraint.addConstraint( tableView.rightAnchor.constraint(equalTo: view.rightAnchor))
-        constraint.addConstraint( tableView.topAnchor.constraint(equalTo: view.topAnchor))
-        constraint.addConstraint( tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor))
-        NSLayoutConstraint.activate(constraint.constraints)
-    }
-
+    /// MARK: TableViewDelegate + Data Source
     public func numberOfSections(in tableView: UITableView) -> Int {
         return 4;
     }
@@ -102,21 +80,21 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 45
+        return (section == 0) ? 60 : 45
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let indexPath = IndexPath(row: 0, section: section)
         let headerView = UITableViewHeaderFooterView()
-        headerView.textLabel?.text = tableViewModelProvider.groupSectionModelForIndexPath(indexPath: indexPath).headerTitle
         return headerView
     }
     
     public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as? UITableViewHeaderFooterView
+        let indexPath = IndexPath(row: 0, section: section)
         headerView?.textLabel?.textColor = pwStyle.appThemeColor
+        headerView?.textLabel?.text = tableViewModelProvider.groupSectionModelForIndexPath(indexPath: indexPath).headerTitle
     }
-
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "SettingsTableViewCell")
         if cell == nil {
@@ -144,6 +122,31 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    
+    /// MARK: Helpers
+    private func configureTableView()
+    {
+        tableView.rowHeight = 45
+        tableView.sectionFooterHeight = 0
+        tableView.isScrollEnabled = true
+        tableView.showsVerticalScrollIndicator = false
+        tableView.bounces = true
+        tableView.backgroundColor = pwStyle.tableViewBackgroundColor
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    private func setupTableViewConstraints()
+    {
+        let constraint = PWConstraint()
+        PWConstraint.disableAutoresize(forView: tableView)
+        constraint.addConstraint( tableView.leftAnchor.constraint(equalTo: view.leftAnchor))
+        constraint.addConstraint( tableView.rightAnchor.constraint(equalTo: view.rightAnchor))
+        constraint.addConstraint( tableView.topAnchor.constraint(equalTo: view.topAnchor))
+        constraint.addConstraint( tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor))
+        NSLayoutConstraint.activate(constraint.constraints)
+    }
+
     private func configureAccessoryViewForTableViewCell(indexPath: IndexPath,
                                                         tableViewCell: UITableViewCell,
                                                         cellModel: SettingsTableViewCellModel)

@@ -19,20 +19,15 @@ public class KeychainItemStore: NSObject, UICollectionViewDataSource {
     
     public var items: [KeychainItem]? {
         get {
-            if saved {
-                guard let filePath = docPath() else {
-                    return nil
-                }
-                
-                _items = reader.unarchiveObject(withFile: filePath) as? [InternetPasswordKeychainItem]
+            guard let filePath = docPath() else {
+                return nil
             }
-            
-            saved = false
+                
+            _items = reader.unarchiveObject(withFile: filePath) as? [PasswordKeychainItem]
             return _items
         }
     }
     
-    private var saved: Bool = false //dirty bit for saving
     private var _items: [KeychainItem]?
     private let fileManager = FileManager.default
     private let writer = NSKeyedArchiver.self
@@ -53,8 +48,7 @@ public class KeychainItemStore: NSObject, UICollectionViewDataSource {
             return false
         }
         
-        saved = writer.archiveRootObject(items, toFile: filePath)
-        return saved
+        return writer.archiveRootObject(items, toFile: filePath)
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
