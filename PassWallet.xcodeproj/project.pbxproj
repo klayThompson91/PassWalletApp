@@ -61,6 +61,7 @@
 		82E7F6941E2DE0C5000E91D3 /* InjectableService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */; };
 		82E7F6961E2DE12D000E91D3 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6951E2DE12D000E91D3 /* Container.swift */; };
 		82E7F6981E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6971E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift */; };
+		82E8EBAB1F64CA2300317DF3 /* PasswordWalletTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */; };
 		82EDA0011E21C21C0071FBCA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0001E21C21C0071FBCA /* AppDelegate.swift */; };
 		82EDA0031E21C21C0071FBCA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */; };
 		82EDA0081E21C21D0071FBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82EDA0071E21C21D0071FBCA /* Assets.xcassets */; };
@@ -160,6 +161,7 @@
 		82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InjectableService.swift; sourceTree = "<group>"; };
 		82E7F6951E2DE12D000E91D3 /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		82E7F6971E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceInterfaceProtocols.swift; sourceTree = "<group>"; };
+		82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordWalletTableViewController.swift; sourceTree = "<group>"; };
 		82ED9FFD1E21C21C0071FBCA /* PassWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82EDA0001E21C21C0071FBCA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 			children = (
 				82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */,
 				82C45AF61EC159FB00068BA1 /* PasswordWalletViewController.swift */,
+				82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */,
 				823B562D1ECC0E2B0034A9A6 /* PasswordEditViewController.swift */,
 				825522211E6B870E0056EC34 /* LoginViewController.swift */,
 				825522231E6B87300056EC34 /* SecureCodeEntryViewController.swift */,
@@ -567,6 +570,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82E8EBAB1F64CA2300317DF3 /* PasswordWalletTableViewController.swift in Sources */,
 				825522241E6B87300056EC34 /* SecureCodeEntryViewController.swift in Sources */,
 				82BBDC681E91AF06007A2C3D /* PasswordKeychainItem.m in Sources */,
 				823DCC681ED1759600CD1021 /* SecureNote.swift in Sources */,

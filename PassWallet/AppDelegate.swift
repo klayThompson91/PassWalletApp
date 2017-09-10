@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ClientDependency, LoginVi
             loginViewController.delegate = self
             let settingsRootViewController = SettingsTableViewController()
             settingsNavigationController = UINavigationController(rootViewController: settingsRootViewController)
-            let passWalletViewController = PasswordWalletViewController()
+            let passWalletViewController = PasswordWalletTableViewController()
             passWalletNavigationController = UINavigationController(rootViewController: passWalletViewController)
             tabBarController.viewControllers = [passWalletNavigationController, settingsNavigationController]
             configureRootViewAsLoginViewController()

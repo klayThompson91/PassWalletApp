@@ -49,7 +49,6 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
         let addButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addButtonPressed(_:)))
         addButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 28, weight: UIFontWeightRegular), fontColor: UIColor.white), for: .normal)
         navigationItem.rightBarButtonItem = addButtonItem
-        tabBarItem = TabBarItemFactory.makeTabBarItem(title: Constants.title, selectedAppearance: ("PassWallet Icon Green", pwStyle.appThemeColor), unselectedAppearance: ("PassWallet Icon Gray", pwStyle.tabBarItemFontColor))
         
         configureCollectionView()
         view.addSubview(collectionView)
@@ -101,7 +100,8 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
     }
     
     @objc private func addButtonPressed(_ sender: UIBarButtonItem) {
-        let passwordEditVC = PasswordEditViewController(keychainItem: InternetPasswordKeychainItem(password: "", accountName: "", website: URL(string: "passwallet.com")!), secureNote: SecureNote())
+        let passwordEditVC = PasswordEditViewController(keychainItem: PasswordKeychainItem(password: "", identifier: "", description: ""), secureNote: SecureNote())
+        
         passwordEditVC.delegate = self
         navigationController?.pushViewController(passwordEditVC, animated: true)
         passwordEditVC.isEditing = true
