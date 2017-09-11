@@ -9,23 +9,68 @@
 import Foundation
 import UIKit
 
+public enum KeychainItemType {
+    case internetPassword
+    case genericPassword
+    
+    public init(keychainItem: KeychainItem) {
+        if let _ = keychainItem as? InternetPasswordKeychainItem {
+            self = .internetPassword
+        } else {
+            self = .genericPassword
+        }
+    }
+    
+    public init?(walletItemType: WalletItemType) {
+        guard walletItemType != .secureNotes else {
+            return nil
+        }
+        
+        if walletItemType == .webPasswords {
+            self = .internetPassword
+        } else {
+            self = .genericPassword
+        }
+    }
+}
+
 /**
  * A lightweight document persistent store for PassWallet's keychain items.
  * Works in conjunction with the Documents/ directory and NSArchiving.
  */
-public class KeychainItemStore: NSObject, UICollectionViewDataSource {
+public class KeychainItemStore: NSObject {
     
     public static let sharedStore = KeychainItemStore()
+    
+    public var keychainItemType: KeychainItemType {
+        didSet {
+            if keychainItemType == .internetPassword {
+                dbIdentifier = Constants.internetPasswordDBIdentifier
+            } else {
+                dbIdentifier = Constants.genericPasswordDBIdentifier
+            }
+        }
+    }
     
     public var items: [KeychainItem]? {
         get {
             guard let filePath = docPath() else {
                 return nil
             }
-                
-            _items = reader.unarchiveObject(withFile: filePath) as? [PasswordKeychainItem]
+            
+            if keychainItemType == .internetPassword {
+                _items = reader.unarchiveObject(withFile: filePath) as? [InternetPasswordKeychainItem]
+            } else {
+                _items = reader.unarchiveObject(withFile: filePath) as? [PasswordKeychainItem]
+            }
+            
             return _items
         }
+    }
+    
+    private struct Constants {
+        static let internetPasswordDBIdentifier = "PassWallet_internetPasswords_DB"
+        static let genericPasswordDBIdentifier = "PassWallet_genericPasswords_DB"
     }
     
     private var _items: [KeychainItem]?
@@ -35,12 +80,12 @@ public class KeychainItemStore: NSObject, UICollectionViewDataSource {
     private var dbIdentifier = ""
     
     public convenience override init() {
-        self.init("PassWallet_KeychainItemDB")
+        self.init(.genericPassword)
     }
     
-    public init(_ persistenceIdentifier: String) {
+    public init(_ keychainItemType: KeychainItemType) {
+        self.keychainItemType = keychainItemType
         super.init()
-        dbIdentifier = persistenceIdentifier
     }
     
     public func save(_ items: [KeychainItem]) -> Bool {
@@ -49,25 +94,6 @@ public class KeychainItemStore: NSObject, UICollectionViewDataSource {
         }
         
         return writer.archiveRootObject(items, toFile: filePath)
-    }
-    
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let unwrappedItems = items else {
-            return 0
-        }
-        
-        return unwrappedItems.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let itemAtIndexPath = items?[indexPath.row]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PasswordSummaryCardCellView", for: indexPath) as! PasswordSummaryCardCellView
-        cell.keychainItem = itemAtIndexPath!
-        return cell
     }
     
     public func clear() -> Bool {

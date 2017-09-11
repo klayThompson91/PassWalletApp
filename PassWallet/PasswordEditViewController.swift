@@ -217,6 +217,22 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
         isEditing = true
     }
     
+    @objc private func deleteButtonPressed(_ sender: UIBarButtonItem) {
+        guard let passwordToDelete = password else {
+            return
+        }
+        var error: NSError? = NSError()
+        let keychainItemStore = KeychainItemStore.sharedStore
+        var keychainItems = keychainItemStore.items
+        keychainItems = keychainItems?.filter { !($0.isEqual(passwordToDelete)) }
+        if let unwrappedKeychainItems = keychainItems {
+            let _ = keychainItemStore.save(unwrappedKeychainItems)
+        }
+        let _ = keychain.delete(passwordKeychainItem: passwordToDelete, error: &error)
+        delegate?.passwordEditViewControllerUpdatedPasswords()
+        navigationController?.popViewController(animated: true)
+    }
+    
     @objc private func saveButtonPressed(_ sender: UIBarButtonItem) {
         let keychainStore = KeychainItemStore.sharedStore
         var keychainItems = keychainStore.items
@@ -303,10 +319,15 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
             } else {
                 title = "Edit"
                 
+                let deleteButtonItem = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteButtonPressed(_:)))
+                deleteButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular), fontColor: UIColor.white), for: .normal)
+                deleteButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular), fontColor: UIColor(white: 1.0, alpha: 0.5)), for: .disabled)
+                
                 let saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed(_:)))
                 saveButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular), fontColor: UIColor.white), for: .normal)
                 saveButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular), fontColor: UIColor(white: 1.0, alpha: 0.5)), for: .disabled)
-                navigationItem.rightBarButtonItem = saveButtonItem
+                
+                navigationItem.rightBarButtonItems = [saveButtonItem, deleteButtonItem]
                 
                 guard let viewControllers = navigationController?.viewControllers else {
                     return
@@ -325,8 +346,7 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
     
     public func supplementaryButtonWasTapped(_ supplementaryButton: UIButton, for fieldSectionIndex: Int) {
         UIPasteboard.general.string = editablePasswordCardView.fieldSections?[fieldSectionIndex].textField.text
-        let message = Message(title: "Copied to clipboard!", backgroundColor: PWAppearance.sharedAppearance.appThemeColor)
-        Whisper.show(whisper: message, to: self.navigationController!, action: .show)
+        ClipboardWhisper.showCopiedMessage(for: self.navigationController!)
     }
     
     public func fieldSectionTextFieldsTextDidChange(_ textFields: [UITextField]) {
