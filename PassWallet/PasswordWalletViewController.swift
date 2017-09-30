@@ -9,18 +9,46 @@
 import Foundation
 import UIKit
 
-public class PasswordWalletViewController : ClientDependencyViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, PasswordEditViewControllerDelegate {
+public enum WalletItemType: Int
+{
+    case webPasswords
+    case genericPasswords
+    case secureNotes
     
-    private var pwStyle = PWAppearance.sharedAppearance
-    public var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private var keychainItemStore = KeychainItemStore.sharedStore
-    private var keychainService: KeychainServiceInterface!
-    
-    private struct Constants {
-        static let title = "Passwords"
+    public func toString() -> String {
+        switch self {
+        case .webPasswords:
+            return "Web Passwords"
+        case .genericPasswords:
+            return "Generic Passwords"
+        case .secureNotes:
+            return "Secure Notes"
+        }
     }
     
-    override public init() {
+    public func toPasswordKeychainItem() -> PasswordKeychainItem? {
+        switch self {
+        case .webPasswords:
+            return InternetPasswordKeychainItem(password: "", accountName: "", website: URL(string: "passwallet.com")!)
+        case .genericPasswords:
+            return PasswordKeychainItem(description: "", value: "")
+        case .secureNotes:
+            return nil
+        }
+    }
+}
+
+public class PasswordWalletViewController : ClientDependencyViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PasswordEditViewControllerDelegate, PasswordSummaryCardCellViewDelegate {
+
+    public var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    private var pwStyle = PWAppearance.sharedAppearance
+    private var keychainItemStore = KeychainItemStore.sharedStore
+    private var keychainService: KeychainServiceInterface!
+    private var currentItemType: WalletItemType
+    
+    public init(walletItemType: WalletItemType) {
+        currentItemType = walletItemType
         super.init()
     }
     
@@ -42,12 +70,12 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = Constants.title
-        navigationItem.title = Constants.title
+        title = currentItemType.toString()
+        navigationItem.title = currentItemType.toString()
         let backButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButtonItem
         let addButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addButtonPressed(_:)))
-        addButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 28, weight: UIFontWeightRegular), fontColor: UIColor.white), for: .normal)
+        addButtonItem.setTitleTextAttributes(PWAppearance.sharedAppearance.attributesFrom(font: UIFont.systemFont(ofSize: 32, weight: UIFontWeightThin), fontColor: UIColor.white), for: .normal)
         navigationItem.rightBarButtonItem = addButtonItem
         
         configureCollectionView()
@@ -95,13 +123,81 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
         return defaultSize
     }
     
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let unwrappedItems = keychainItemStore.items else {
+            return 0
+        }
+        
+        return unwrappedItems.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let itemAtIndexPath = keychainItemStore.items?[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PasswordSummaryCardCellView", for: indexPath) as! PasswordSummaryCardCellView
+        cell.keychainItem = itemAtIndexPath!
+        cell.delegate = self
+        return cell
+    }
+    
+    public func moreActionsButtonWasTapped(for keychainItem: PasswordKeychainItem) {
+        
+        var error: NSError? = NSError()
+        var title = keychainItem.identifier
+        if let internetPasswordKeychainItem = keychainItem as? InternetPasswordKeychainItem {
+            title = internetPasswordKeychainItem.website.absoluteString
+        }
+        
+        let moreActionsAlert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        
+        if let internetPasswordKeychainItem = keychainItem as? InternetPasswordKeychainItem {
+            moreActionsAlert.addAction(UIAlertAction(title: "copy website", style: .default, handler: { [weak self] (_) in
+                if let strongSelf = self {
+                    UIPasteboard.general.string = internetPasswordKeychainItem.website.absoluteString
+                    ClipboardWhisper.showCopiedMessage(for: strongSelf.navigationController!)
+                }
+            }))
+            moreActionsAlert.addAction(UIAlertAction(title: "copy email/username", style: .default, handler: { [weak self] (_) in
+                if let strongSelf = self {
+                    UIPasteboard.general.string = internetPasswordKeychainItem.accountName
+                    ClipboardWhisper.showCopiedMessage(for: strongSelf.navigationController!)
+                }
+            }))
+        }
+        
+        moreActionsAlert.addAction(UIAlertAction(title: "copy password", style: .default, handler: { [weak self] (_) in
+            if let strongSelf = self {
+                UIPasteboard.general.string = strongSelf.keychainService.getStringValueFor(passwordKeychainItem: keychainItem, error: &error) as String?
+                ClipboardWhisper.showCopiedMessage(for: strongSelf.navigationController!)
+            }
+        }))
+        
+        moreActionsAlert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] (_) in
+            if let strongSelf = self {
+                var keychainItems = strongSelf.keychainItemStore.items
+                keychainItems = keychainItems?.filter { !($0.isEqual(keychainItem)) }
+                if let unwrappedKeychainItems = keychainItems {
+                    let _ = strongSelf.keychainItemStore.save(unwrappedKeychainItems)
+                }
+                let _ = strongSelf.keychainService.delete(passwordKeychainItem: keychainItem, error: &error)
+                strongSelf.collectionView.reloadData()
+            }
+        }))
+        
+        moreActionsAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(moreActionsAlert, animated: true, completion: nil)
+    }
+    
     public func passwordEditViewControllerUpdatedPasswords() {
         collectionView.reloadData()
     }
     
     @objc private func addButtonPressed(_ sender: UIBarButtonItem) {
-        let passwordEditVC = PasswordEditViewController(keychainItem: PasswordKeychainItem(password: "", identifier: "", description: ""), secureNote: SecureNote())
-        
+        let passwordEditVC = PasswordEditViewController(keychainItem: currentItemType.toPasswordKeychainItem(), secureNote: SecureNote())
         passwordEditVC.delegate = self
         navigationController?.pushViewController(passwordEditVC, animated: true)
         passwordEditVC.isEditing = true
@@ -114,9 +210,13 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
         collectionViewLayout.sectionInset = UIEdgeInsets(top: 25, left: 0, bottom: 25, right: 0)
         collectionViewLayout.minimumLineSpacing = 20
         
+        if currentItemType != .secureNotes, let keychainItemType = KeychainItemType(walletItemType: currentItemType) {
+            keychainItemStore.keychainItemType = keychainItemType
+        }
+        
         collectionView.backgroundColor = pwStyle.tableViewBackgroundColor
         collectionView.collectionViewLayout = collectionViewLayout
-        collectionView.dataSource = keychainItemStore
+        collectionView.dataSource = self
         collectionView.register(PasswordSummaryCardCellView.self, forCellWithReuseIdentifier: "PasswordSummaryCardCellView")
         collectionView.delegate = self
     }

@@ -106,7 +106,10 @@ public class PasswordWalletTableViewController : UIViewController, UITableViewDe
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(PasswordWalletViewController(), animated: true)
+        guard let walletItemType = WalletItemType(rawValue: indexPath.row) else {
+            return
+        }
+        navigationController?.pushViewController(PasswordWalletViewController(walletItemType: walletItemType), animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
