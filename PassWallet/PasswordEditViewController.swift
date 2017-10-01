@@ -67,9 +67,6 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         configureNavigationBar()
-        /*if #available(iOS 11.0, *) {
-            containerScrollView.contentInsetAdjustmentBehavior = .never
-        }*/
         containerScrollView.backgroundColor = PWAppearance.sharedAppearance.tableViewBackgroundColor
         if self.password != nil {
             configureEditablePasswordCardView()
