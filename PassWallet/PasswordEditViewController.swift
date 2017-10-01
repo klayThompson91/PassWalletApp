@@ -67,6 +67,9 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         configureNavigationBar()
+        /*if #available(iOS 11.0, *) {
+            containerScrollView.contentInsetAdjustmentBehavior = .never
+        }*/
         containerScrollView.backgroundColor = PWAppearance.sharedAppearance.tableViewBackgroundColor
         if self.password != nil {
             configureEditablePasswordCardView()
@@ -207,7 +210,7 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
     }
     
     @objc private func keyboardDidShow(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             updateScrollViewContentInset(with: contentInsets)
         }
