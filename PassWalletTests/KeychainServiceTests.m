@@ -45,6 +45,17 @@
     XCTAssertTrue([keychainService containsKeychainItem:loginPassword], @"The iOS Keychain should now be containing a PasswordKeyChainItem");
 }
 
+- (void)testGenericPasswordItemsUniquelyIdentified {
+    NSError *error = [[NSError alloc] init];
+    KeychainService *keychainService = [[KeychainService alloc] init];
+    PasswordKeychainItem *gunVaultPasswordAK47 = [[PasswordKeychainItem alloc] initWithPassword:@"5678" identifier:@"My gun vault" description:@"AK47"];
+    PasswordKeychainItem *gunVaultPasswordAK46 = [[PasswordKeychainItem alloc] initWithPassword:@"5678" identifier:@"My gun vault" description:@"AK46"];
+    [keychainService deleteKeychainItem:gunVaultPasswordAK47 error:nil];
+    [keychainService addKeychainItem:gunVaultPasswordAK47 error:&error];
+    XCTAssertTrue([keychainService containsKeychainItem:gunVaultPasswordAK47]);
+    XCTAssertFalse([keychainService containsKeychainItem:gunVaultPasswordAK46]);
+}
+
 - (void)testGetPasswordForStoredPasswordKeychainItem {
     NSError *error = [[NSError alloc] init];
     KeychainService *keychainService = [[KeychainService alloc] init];

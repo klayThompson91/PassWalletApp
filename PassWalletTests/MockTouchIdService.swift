@@ -16,13 +16,12 @@ public class MockTouchIdService: InjectableService, TouchIDServiceInterface
     private var breakingAuthenticationResult: (result: Bool, error: Error?)
     private var authenticationAttemptCounter: Int
     
-    public override init()
+    public init()
     {
         authenticationAttemptCounter = 0
         fingerPrintPolicyResult = (true, nil)
         initialAuthenticationResult = (true, nil)
         breakingAuthenticationResult = (true, nil)
-        super.init()
     }
     
     public func stubCanDeviceCollectFingerPrint(stubbedReturnValue: (collectable: Bool, error: NSError?))

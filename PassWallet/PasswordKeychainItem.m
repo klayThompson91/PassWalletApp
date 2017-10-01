@@ -52,8 +52,12 @@
     NSMutableDictionary *key = super.key;
     key[(__bridge id)kSecClass] = (__bridge id)kSecClassGenericPassword;
     NSString *itemId = (self.identifier) ? self.identifier : self.itemDescription;
+    NSString *service = self.itemDescription;
     if (itemId) {
         key[(__bridge id)kSecAttrAccount] = [itemId dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    if (service) {
+        key[(__bridge id)kSecAttrService] = [service dataUsingEncoding:NSUTF8StringEncoding];
     }
     _key = key;
     return _key;

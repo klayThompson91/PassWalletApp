@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import CryptoSwift
+
 
 public protocol SecureCodeEntryViewControllerDelegate : class
 {
@@ -39,11 +41,13 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
             return secureCodeEntryStateMachine.stateMachineContext
         }
         set(newContext) {
-            let pinCodeKeychainItem = PasswordKeychainItem(password: "", identifier: self.secureCodeEntryType.toString())
-            if !keychainService.contains(passwordKeychainItem: pinCodeKeychainItem) {
-                self.secureCodeEntryStateMachine.stateMachineContext = .setupSecureCode
+            let masterSaltKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordSaltKey)
+            let masterPasswordKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordKey)
+            if keychainService.contains(passwordKeychainItem: masterSaltKeychainItem)
+                && keychainService.contains(passwordKeychainItem: masterPasswordKeychainItem) {
+                secureCodeEntryStateMachine.stateMachineContext = newContext
             } else {
-                self.secureCodeEntryStateMachine.stateMachineContext = newContext
+                secureCodeEntryStateMachine.stateMachineContext = .setupSecureCode
             }
         }
     }

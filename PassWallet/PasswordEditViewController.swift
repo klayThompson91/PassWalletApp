@@ -37,8 +37,8 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
     private var secureNoteCardView = EditablePasswordCardView(frame: .zero)
     
     private var password: PasswordKeychainItem?
-    private var secureNote: SecureNote = SecureNote()
-    private var editValues = EditFieldValueGenerator(nil, secureNote: SecureNote())
+    private var secureNote: SecureNote = SecureNote.emptyNote()
+    private var editValues = EditFieldValueGenerator(nil, secureNote: SecureNote.emptyNote())
     private var keychain: KeychainServiceInterface!
     
     private struct Constants {
