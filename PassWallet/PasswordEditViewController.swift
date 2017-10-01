@@ -207,7 +207,7 @@ public class PasswordEditViewController : ClientDependencyViewController, Editab
     }
     
     @objc private func keyboardDidShow(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             updateScrollViewContentInset(with: contentInsets)
         }
