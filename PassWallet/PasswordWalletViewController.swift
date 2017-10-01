@@ -99,7 +99,7 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
             }
         }
         
-        let passwordEditVC = PasswordEditViewController(keychainItem: selectedKeychainItem, secureNote: SecureNote())
+        let passwordEditVC = PasswordEditViewController(keychainItem: selectedKeychainItem, secureNote: SecureNote.emptyNote())
         passwordEditVC.delegate = self
         navigationController?.pushViewController(passwordEditVC, animated: true)
         passwordEditVC.isEditing = false
@@ -197,7 +197,7 @@ public class PasswordWalletViewController : ClientDependencyViewController, UICo
     }
     
     @objc private func addButtonPressed(_ sender: UIBarButtonItem) {
-        let passwordEditVC = PasswordEditViewController(keychainItem: currentItemType.toPasswordKeychainItem(), secureNote: SecureNote())
+        let passwordEditVC = PasswordEditViewController(keychainItem: currentItemType.toPasswordKeychainItem(), secureNote: SecureNote.emptyNote())
         passwordEditVC.delegate = self
         navigationController?.pushViewController(passwordEditVC, animated: true)
         passwordEditVC.isEditing = true

@@ -46,6 +46,7 @@
 -(NSMutableDictionary *)key
 {
     NSMutableDictionary *key = super.key;
+    [key removeObjectForKey:(__bridge id)kSecAttrService]; //only applies to sec class generic password
     key[(__bridge id)kSecClass] = (__bridge id)kSecClassInternetPassword;
     key[(__bridge id)kSecAttrServer] = self.website.absoluteString;
     key[(__bridge id)kSecAttrAccount] = self.accountName;

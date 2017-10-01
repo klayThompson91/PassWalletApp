@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CryptoSwift
 
 /**
  * Use SecureCodeEntryManager to manage a secureCode entry for PassWallet.
@@ -106,21 +107,22 @@ public class SecureCodeEntryManager: DirectedGraphStateMachine, ClientDependency
         var stateToTransitionToo: SecureCodeEntryState!
         
         switch state {
+        
         case .enterSecureCode:
             enterSecureCodeCount += 1
-            let secureCodeKeychainItem = PasswordKeychainItem(password: secureCode, identifier: secureCodeEntryType.toString())
-            let passcodeStoredInKeychain = (keychainService.getStringValueFor(passwordKeychainItem: secureCodeKeychainItem, error: nil) as String?)
-            if secureCode == passcodeStoredInKeychain {
+            if isSecureCodeValid(secureCode: secureCode) {
                 stateToTransitionToo = (stateMachineContext == .changeSecureCode) ? .setSecureCode : .secureCodeVerified
             } else {
                 stateToTransitionToo = (enterSecureCodeCount == secureCodeEntryLimit) ? .secureCodeRejected : .enterSecureCode
             }
             break
+        
         case .setSecureCode:
             setSecureCodeCount += 1
             setSecureCode = secureCode
             stateToTransitionToo = .verifySecureCode
             break
+        
         case .verifySecureCode:
             if secureCode == setSecureCode {
                 stateToTransitionToo = .secureCodeVerified
@@ -128,23 +130,42 @@ public class SecureCodeEntryManager: DirectedGraphStateMachine, ClientDependency
                 stateToTransitionToo = .setSecureCode
             }
             break
+        
         case .userCancelledSecureCode:
             stateToTransitionToo = .secureCodeRejected
             break
+        
         case .secureCodeVerified:
+            
             var keychainResult = true
             var error: NSError? = NSError()
-            let secureCodeKeychainItem = PasswordKeychainItem(password: secureCode, identifier: secureCodeEntryType.toString())
+            
+            //generate a brand new master salt
+            let masterSalt = UUID().unformattedUuidString
+            
+            //derive a new key (master password) from the new secure code and master salt
+            let masterPassword = deriveMasterPasswordFrom(secureCode: secureCode, salt: masterSalt)
+            
+            //generate master password and master salt keychain items
+            let masterPasswordSaltKeychainItem = PasswordKeychainItem(password: masterSalt, identifier: passWalletMasterPasswordSaltKey)
+            let masterPasswordKeychainItem = PasswordKeychainItem(password: masterPassword, identifier: passWalletMasterPasswordKey)
+            
+            //update the iOS keychain with the new application master password and salt
             if stateMachineContext == .setupSecureCode {
-                keychainResult = keychainService.add(passwordKeychainItem: secureCodeKeychainItem, error: &error)
+                keychainResult = keychainService.add(passwordKeychainItem: masterPasswordKeychainItem, error: &error)
+                keychainResult = keychainService.add(passwordKeychainItem: masterPasswordSaltKeychainItem, error: &error)
             } else if stateMachineContext == .changeSecureCode {
-                keychainResult = keychainService.update(passwordKeychainItem: secureCodeKeychainItem, error: &error)
+                keychainResult = keychainService.update(passwordKeychainItem: masterPasswordKeychainItem, error: &error)
+                keychainResult = keychainService.update(passwordKeychainItem: masterPasswordSaltKeychainItem, error: &error)
             }
+            
             if !keychainResult {
                 assertionFailure("KeychainService failed to update and store the pin, for stateMachineContext: \(stateMachineContext.title(fromEntryType: secureCodeEntryType)), for stateMachineState: \(state.toString()), with error: \(String(describing: error?.code)), \(String(describing: error?.description))")
             }
+            
             clearSecureCodes()
             return
+        
         default:
             return
         }
@@ -198,6 +219,46 @@ public class SecureCodeEntryManager: DirectedGraphStateMachine, ClientDependency
     }
     
     /// MARK: Private Helpers
+    private func isSecureCodeValid(secureCode: String) -> Bool
+    {
+        //Fetch master salt and password from keychain
+        let masterSaltKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordSaltKey)
+        let masterPasswordKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordKey)
+        let masterSaltStoredInKeychain = keychainService.getStringValueFor(passwordKeychainItem: masterSaltKeychainItem, error: nil) as String?
+        let masterPasswordStoredInKeychain = keychainService.getStringValueFor(passwordKeychainItem: masterPasswordKeychainItem, error: nil) as String?
+        
+        //Combine user-entered secure code and master salt to generate candidate master password
+        let candidateMasterPassword = deriveMasterPasswordFrom(secureCode: secureCode, salt: masterSaltStoredInKeychain)
+        
+        //Assert candidate master password equals master password in keychain
+        return (candidateMasterPassword == masterPasswordStoredInKeychain)
+    }
+    
+    //Derives a master password from a secureCode and saltValue
+    //MasterPassword = CryptFx(SecureCode + Salt)
+    private func deriveMasterPasswordFrom(secureCode: String?, salt: String?) -> String
+    {
+        guard let secureCodeToApply = secureCode, let saltToApply = salt else {
+            assertionFailure("Password Key generation failed with error: Insufficient data for Password Key generation, either a salt or a secureCode were not provided")
+            return ""
+        }
+        
+        var masterPassword = ""
+        do {
+            let masterPasswordByteArray = try PKCS5.PBKDF2(password: Array(secureCodeToApply.utf8), salt: Array(saltToApply.utf8), iterations: 4096, keyLength: 16, variant: .sha256).calculate()
+            masterPassword = masterPasswordByteArray.toHexString()
+        } catch {
+            assertionFailure("Password Key generation failed with error: \(error)")
+        }
+        
+        guard masterPassword != "" && masterPassword.characters.count == 32 else {
+            assertionFailure("Password Key generation failed with error: Password Key incorrect length.")
+            return ""
+        }
+        
+        return masterPassword
+    }
+    
     private func loadDirectedGraph()
     {
         directedGraph = [.enterSecureCode : validStateTransitions(forState: .enterSecureCode),

@@ -8,6 +8,9 @@
 
 import Foundation
 
+public let passWalletMasterPasswordKey = "PassWallet_Master_Password_Identifier"
+public let passWalletMasterPasswordSaltKey = "PassWallet_Master_Salt_Identifier"
+
 /**
  * Swift wrapper for the Objective-C KeychainService Object.
  * Specifically made for Dependency Injection to get around the fact
