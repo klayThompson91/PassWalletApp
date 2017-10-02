@@ -41,10 +41,7 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
             return secureCodeEntryStateMachine.stateMachineContext
         }
         set(newContext) {
-            let masterSaltKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordSaltKey)
-            let masterPasswordKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordKey)
-            if keychainService.contains(passwordKeychainItem: masterSaltKeychainItem)
-                && keychainService.contains(passwordKeychainItem: masterPasswordKeychainItem) {
+            if PWCredentials().hasCredentials {
                 secureCodeEntryStateMachine.stateMachineContext = newContext
             } else {
                 secureCodeEntryStateMachine.stateMachineContext = .setupSecureCode

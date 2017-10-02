@@ -24,5 +24,13 @@ public extension String {
     mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
+    
+    func appendToDocumentsDirectory() -> String? {
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first as NSURL? else {
+            return nil
+        }
+        
+        return url.appendingPathComponent(self)?.path
+    }
 
 }
