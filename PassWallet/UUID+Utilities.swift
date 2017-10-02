@@ -17,7 +17,7 @@ public extension UUID {
             for uuidComponent in uuidComponents {
                 unformattedUuidString += uuidComponent
             }
-            return unformattedUuidString
+            return String(unformattedUuidString.prefix(16))
         }
     }
     
