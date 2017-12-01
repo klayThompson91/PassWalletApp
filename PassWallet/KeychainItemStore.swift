@@ -1,5 +1,5 @@
 //
-//  KeychainItemDB.swift
+//  KeychainItemStore.swift
 //  PassWallet
 //
 //  Created by Abhay Curam on 5/10/17.
@@ -45,16 +45,16 @@ public class KeychainItemStore: NSObject {
     public var keychainItemType: KeychainItemType {
         didSet {
             if keychainItemType == .internetPassword {
-                dbIdentifier = Constants.internetPasswordDBIdentifier
+                currentStoreFile = internetPasswordStoreFileName
             } else {
-                dbIdentifier = Constants.genericPasswordDBIdentifier
+                currentStoreFile = genericPasswordStoreFileName
             }
         }
     }
     
     public var items: [KeychainItem]? {
         get {
-            guard let filePath = docPath() else {
+            guard let filePath = currentStoreFile.appendToDocumentsDirectory() else {
                 return nil
             }
             
@@ -68,16 +68,14 @@ public class KeychainItemStore: NSObject {
         }
     }
     
-    private struct Constants {
-        static let internetPasswordDBIdentifier = "PassWallet_internetPasswords_DB"
-        static let genericPasswordDBIdentifier = "PassWallet_genericPasswords_DB"
-    }
+    private let internetPasswordStoreFileName = "PassWallet_internetPasswords_DB"
+    private let genericPasswordStoreFileName = "PassWallet_genericPasswords_DB"
     
     private var _items: [KeychainItem]?
     private let fileManager = FileManager.default
     private let writer = NSKeyedArchiver.self
     private let reader = NSKeyedUnarchiver.self
-    private var dbIdentifier = ""
+    private var currentStoreFile = ""
     
     public convenience override init() {
         self.init(.genericPassword)
@@ -89,7 +87,7 @@ public class KeychainItemStore: NSObject {
     }
     
     public func save(_ items: [KeychainItem]) -> Bool {
-        guard let filePath = docPath() else {
+        guard let filePath = currentStoreFile.appendToDocumentsDirectory() else {
             return false
         }
         
@@ -98,14 +96,6 @@ public class KeychainItemStore: NSObject {
     
     public func clear() -> Bool {
         return save([KeychainItem]())
-    }
-    
-    private func docPath() -> String? {
-        guard let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first as NSURL? else {
-            return nil
-        }
-        
-        return url.appendingPathComponent(dbIdentifier)?.path
     }
     
 }

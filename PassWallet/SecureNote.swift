@@ -9,27 +9,35 @@
 import Foundation
 import CryptoSwift
 
+/// A SecureNote consists of a note (text) and a title. SecureNote's
+/// store an encrypted version of the note in memory and on-disk.
+/// When SecureNote's properties are requested, each property value is decrypted
+/// and returned in plain-text. Decryption occurs everytime a property is accessed
+/// because SecureNote only holds on to encrypted data.
 public class SecureNote : NSObject, NSCoding, ClientDependency {
     
     public var noteID: String
     
     public var text: String {
         get {
-            if shouldDecrypt {
-                return decryptEncryptedCipherText(cipherText: _text)
-            } else {
-                return _text
+            guard let decryptedText = CipherString(string: _text, iv: ivHash).decrypt else {
+                assertionFailure("SecureNote decryption error for Text")
+                return ""
             }
+            
+            return decryptedText
         }
+        
     }
     
     public var title: String {
         get {
-            if shouldDecrypt {
-                return decryptEncryptedCipherText(cipherText: _title)
-            } else {
-                return _title
+            guard let decryptedTitle = CipherString(string: _title, iv: ivHash).decrypt else {
+                assertionFailure("SecureNote decryption error for Title")
+                return ""
             }
+            
+            return decryptedTitle
         }
     }
     
@@ -38,29 +46,35 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
     private let secureNoteTitleKey = "secureNoteTitle"
     private let secureNoteIvHash = "secureNote_ivHash"
     
-    private var shouldDecrypt: Bool
     private var _text: String
     private var _title: String
     private var keychainService: KeychainServiceInterface!
     private var ivHash: String //unique initialization vector for AES265 encryption
     
-    public convenience init(title: String, text: String) {
+    public convenience init?(title: String, text: String) {
         self.init(title: title, text: text, noteID: "")
     }
     
-    public init(title: String, text: String, noteID: String) {
-        shouldDecrypt = false
+    public init?(title: String, text: String, noteID: String) {
         self.noteID = noteID
         ivHash = UUID().unformattedUuidString
-        _text = text
-        _title = title
+        guard
+            let encryptedText = PlainString(string: text, iv: ivHash).encrypt,
+            let encryptedTitle = PlainString(string: title, iv: ivHash).encrypt else
+        {
+            assertionFailure("Secure Note encryption error")
+            return nil
+        }
+        
+        _text = encryptedText
+        _title = encryptedTitle
         super.init()
         Container.sharedContainer.registerDependency(dependency: self)
     }
     
     public class func emptyNote() -> SecureNote
     {
-        return SecureNote(title: "", text: "", noteID: "")
+        return SecureNote(title: "", text: "", noteID: "")!
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -73,7 +87,6 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
             return nil
         }
         
-        shouldDecrypt = true
         ivHash = decodedIv
         noteID = decodedId
         _text = decodedText
@@ -83,21 +96,8 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
     }
     
     public func encode(with aCoder: NSCoder) {
-        var encryptedText = ""
-        var encryptedTitle = ""
-        let initializationVector = ivHash
-        do {
-            let aesEncryptor = try AES(key: fetchMasterPasswordOrFail(), iv: initializationVector)
-            let encryptedTextByteArray = try aesEncryptor.encrypt(Array(_text.utf8))
-            let encryptedTitleByteArray = try aesEncryptor.encrypt(Array(_title.utf8))
-            encryptedText = encryptedTextByteArray.toHexString()
-            encryptedTitle = encryptedTitleByteArray.toHexString()
-        } catch {
-            assertionFailure("Secure Note encoding and serialization failed due to error during encryption, Error: \(error)")
-        }
-        
-        aCoder.encode(encryptedText, forKey: secureNoteTextKey)
-        aCoder.encode(encryptedTitle, forKey: secureNoteTitleKey)
+        aCoder.encode(_text, forKey: secureNoteTextKey)
+        aCoder.encode(_title, forKey: secureNoteTitleKey)
         aCoder.encode(noteID, forKey: secureNoteIdentifierKey)
         aCoder.encode(ivHash, forKey: secureNoteIvHash)
     }
@@ -112,29 +112,6 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
                 keychainService = dependency as? KeychainServiceInterface
             }
         }
-    }
-    
-    private func fetchMasterPasswordOrFail() -> String {
-        let masterPasswordKeychainItem = PasswordKeychainItem(password: "", identifier: passWalletMasterPasswordKey)
-        guard let masterPassword = keychainService.getStringValueFor(passwordKeychainItem: masterPasswordKeychainItem, error: nil) as String? else {
-            assertionFailure("Failed to pull masterPassword from iOS Keychain while encoding and serializing SecureNote")
-            return ""
-        }
-        
-        return masterPassword
-    }
-    
-    private func decryptEncryptedCipherText(cipherText: String) -> String {
-        var decryptedText = ""
-        let cipherTextByteArray = cipherText.hexaDecimalStringToByteArray
-        do {
-            let aesDecryptor = try AES(key: fetchMasterPasswordOrFail(), iv: ivHash)
-            let decryptedTextByteArray = try aesDecryptor.decrypt(cipherTextByteArray)
-            decryptedText = String(data: Data(bytes: decryptedTextByteArray), encoding: .utf8) ?? ""
-        } catch {
-            assertionFailure("Secure Note failed during decoding/deserialization due to a failure during decryption, Error: \(error)")
-        }
-        return decryptedText
     }
     
 }
