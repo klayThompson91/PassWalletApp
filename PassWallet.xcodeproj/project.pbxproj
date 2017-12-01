@@ -61,6 +61,8 @@
 		82E0134B1E555FD600E54779 /* MockPinCodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E0134A1E555FD600E54779 /* MockPinCodeHandler.swift */; };
 		82E0134F1E55664100E54779 /* MockTouchIdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E0134E1E55664100E54779 /* MockTouchIdService.swift */; };
 		82E041E61E6CBC9900E801DA /* PinDigitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E041E51E6CBC9900E801DA /* PinDigitView.swift */; };
+		82E369F71FD1E679008B3732 /* PWCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E369F61FD1E679008B3732 /* PWCredentials.swift */; };
+		82E369F91FD1E6F1008B3732 /* CryptoString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E369F81FD1E6F1008B3732 /* CryptoString.swift */; };
 		82E7F6921E2DE080000E91D3 /* ClientDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6911E2DE080000E91D3 /* ClientDependency.swift */; };
 		82E7F6941E2DE0C5000E91D3 /* InjectableService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */; };
 		82E7F6961E2DE12D000E91D3 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6951E2DE12D000E91D3 /* Container.swift */; };
@@ -165,6 +167,8 @@
 		82E0134A1E555FD600E54779 /* MockPinCodeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockPinCodeHandler.swift; sourceTree = "<group>"; };
 		82E0134E1E55664100E54779 /* MockTouchIdService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockTouchIdService.swift; sourceTree = "<group>"; };
 		82E041E51E6CBC9900E801DA /* PinDigitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDigitView.swift; sourceTree = "<group>"; };
+		82E369F61FD1E679008B3732 /* PWCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PWCredentials.swift; sourceTree = "<group>"; };
+		82E369F81FD1E6F1008B3732 /* CryptoString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoString.swift; sourceTree = "<group>"; };
 		82E7F6911E2DE080000E91D3 /* ClientDependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDependency.swift; sourceTree = "<group>"; };
 		82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InjectableService.swift; sourceTree = "<group>"; };
 		82E7F6951E2DE12D000E91D3 /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
@@ -238,10 +242,12 @@
 			name = KeyChain;
 			sourceTree = "<group>";
 		};
-		825522251E6B96B90056EC34 /* Utilities */ = {
+		825522251E6B96B90056EC34 /* Helpers + Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				825522261E6B97180056EC34 /* UIFont+FontDescriptorTraits.swift */,
+				82E369F61FD1E679008B3732 /* PWCredentials.swift */,
+				82E369F81FD1E6F1008B3732 /* CryptoString.swift */,
 				82627D411EC556AF004C3FB6 /* UIView+ViewTree.swift */,
 				825522281E6B97B50056EC34 /* PWConstraint.swift */,
 				821566FE1E21CFE70038D079 /* PWAppearance.swift */,
@@ -250,7 +256,7 @@
 				82822D4F1F6648330090D228 /* ClipboardWhisper.swift */,
 				824ED0A71F805C17004B6492 /* UUID+Utilities.swift */,
 			);
-			name = Utilities;
+			name = "Helpers + Utilities";
 			sourceTree = "<group>";
 		};
 		82627D401EC54A2F004C3FB6 /* Persistence */ = {
@@ -400,7 +406,7 @@
 			children = (
 				82BF09911E8F7D3D00EFADED /* State Machines */,
 				82A3260E1E87415E00E53CB2 /* Application Lifecycle */,
-				825522251E6B96B90056EC34 /* Utilities */,
+				825522251E6B96B90056EC34 /* Helpers + Utilities */,
 				82E7F69D1E2DEEBE000E91D3 /* Dependency Injection */,
 				82E7F69C1E2DEEA8000E91D3 /* Services */,
 				82E7F69B1E2DEE72000E91D3 /* Models */,
@@ -603,6 +609,7 @@
 				825522221E6B870E0056EC34 /* LoginViewController.swift in Sources */,
 				821566FF1E21CFE70038D079 /* PWAppearance.swift in Sources */,
 				823B56281ECBD28D0034A9A6 /* BaseCardViews.swift in Sources */,
+				82E369F91FD1E6F1008B3732 /* CryptoString.swift in Sources */,
 				826A46FA1E3ECBBE0055ED3D /* AuthenticationSessionManager.swift in Sources */,
 				82C57AA01E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift in Sources */,
 				823A87571E906EC900E9BD45 /* InternetPasswordKeychainItem.m in Sources */,
@@ -617,6 +624,7 @@
 				82C57A9E1E2C67560081D6F5 /* SettingsViewControllerModelProvider.swift in Sources */,
 				82E7F6941E2DE0C5000E91D3 /* InjectableService.swift in Sources */,
 				82E7F6961E2DE12D000E91D3 /* Container.swift in Sources */,
+				82E369F71FD1E679008B3732 /* PWCredentials.swift in Sources */,
 				82C57AA21E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift in Sources */,
 				828983BB1ED24CF200CD443C /* String+Utilities.swift in Sources */,
 				828983BD1ED2A7D800CD443C /* EditFieldValueGenerator.swift in Sources */,
