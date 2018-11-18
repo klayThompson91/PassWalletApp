@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		821566FF1E21CFE70038D079 /* PWAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821566FE1E21CFE70038D079 /* PWAppearance.swift */; };
-		822205431EC3C073001C2998 /* KeychainItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822205421EC3C073001C2998 /* KeychainItemStore.swift */; };
-		822205461EC42948001C2998 /* KeychainItemStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822205451EC42948001C2998 /* KeychainItemStoreTests.swift */; };
+		822205431EC3C073001C2998 /* WalletItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822205421EC3C073001C2998 /* WalletItemStore.swift */; };
 		822C07B71E85F18600CB61D3 /* AutoLockTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822C07B61E85F18600CB61D3 /* AutoLockTimerController.swift */; };
 		822F04C21E5A89A200BA43BC /* PWTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 822F04C11E5A89A200BA43BC /* PWTestCase.swift */; };
 		823A874F1E90670C00E9BD45 /* KeychainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 823A874E1E90670C00E9BD45 /* KeychainItem.m */; };
@@ -20,7 +19,7 @@
 		823B56281ECBD28D0034A9A6 /* BaseCardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B56271ECBD28D0034A9A6 /* BaseCardViews.swift */; };
 		823B562A1ECBE44F0034A9A6 /* EditablePasswordCardSectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B56291ECBE44F0034A9A6 /* EditablePasswordCardSectionViews.swift */; };
 		823B562C1ECBEBED0034A9A6 /* EditablePasswordCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B562B1ECBEBED0034A9A6 /* EditablePasswordCardView.swift */; };
-		823B562E1ECC0E2B0034A9A6 /* PasswordEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B562D1ECC0E2B0034A9A6 /* PasswordEditViewController.swift */; };
+		823B562E1ECC0E2B0034A9A6 /* WalletItemEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B562D1ECC0E2B0034A9A6 /* WalletItemEditViewController.swift */; };
 		823B5F591E592B73008E8BF4 /* AuthenticationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B5F581E592B73008E8BF4 /* AuthenticationManagerTests.swift */; };
 		823DCC681ED1759600CD1021 /* SecureNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823DCC671ED1759600CD1021 /* SecureNote.swift */; };
 		8240ACFF1EA5EF4F00ACAD2E /* SecureCodeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8240ACFE1EA5EF4F00ACAD2E /* SecureCodeEntry.swift */; };
@@ -53,7 +52,7 @@
 		82BBDC6B1E91E827007A2C3D /* KeychainService.m in Sources */ = {isa = PBXBuildFile; fileRef = 82BBDC6A1E91E827007A2C3D /* KeychainService.m */; };
 		82BDE6051EA2FBDF002007AE /* KeychainServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 82BDE6041EA2FBDF002007AE /* KeychainServiceTests.m */; };
 		82C45AF51EC1431100068BA1 /* TabBarItemFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C45AF41EC1431100068BA1 /* TabBarItemFactory.swift */; };
-		82C45AF71EC159FB00068BA1 /* PasswordWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C45AF61EC159FB00068BA1 /* PasswordWalletViewController.swift */; };
+		82C45AF71EC159FB00068BA1 /* WalletItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C45AF61EC159FB00068BA1 /* WalletItemListViewController.swift */; };
 		82C57A9E1E2C67560081D6F5 /* SettingsViewControllerModelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C57A9D1E2C67560081D6F5 /* SettingsViewControllerModelProvider.swift */; };
 		82C57AA01E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C57A9F1E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift */; };
 		82C57AA21E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C57AA11E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift */; };
@@ -67,12 +66,15 @@
 		82E7F6941E2DE0C5000E91D3 /* InjectableService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */; };
 		82E7F6961E2DE12D000E91D3 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6951E2DE12D000E91D3 /* Container.swift */; };
 		82E7F6981E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F6971E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift */; };
-		82E8EBAB1F64CA2300317DF3 /* PasswordWalletTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */; };
+		82E8EBAB1F64CA2300317DF3 /* WalletItemMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E8EBAA1F64CA2300317DF3 /* WalletItemMenuViewController.swift */; };
 		82EDA0011E21C21C0071FBCA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0001E21C21C0071FBCA /* AppDelegate.swift */; };
 		82EDA0031E21C21C0071FBCA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */; };
 		82EDA0081E21C21D0071FBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82EDA0071E21C21D0071FBCA /* Assets.xcassets */; };
 		82EDA00B1E21C21D0071FBCA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82EDA0091E21C21D0071FBCA /* LaunchScreen.storyboard */; };
 		82EDA0211E21C21D0071FBCA /* PassWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0201E21C21D0071FBCA /* PassWalletUITests.swift */; };
+		B512C81C20E2B90A0059BB58 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B512C81B20E2B90A0059BB58 /* StoreKit.framework */; };
+		B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */; };
+		B5EE9C9F20DD6D5B00D8957B /* WalletItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,9 +111,8 @@
 
 /* Begin PBXFileReference section */
 		821566FE1E21CFE70038D079 /* PWAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWAppearance.swift; sourceTree = "<group>"; };
-		822205421EC3C073001C2998 /* KeychainItemStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainItemStore.swift; sourceTree = "<group>"; };
+		822205421EC3C073001C2998 /* WalletItemStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletItemStore.swift; sourceTree = "<group>"; };
 		822205441EC42752001C2998 /* KeychainItemCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemCoding.h; sourceTree = "<group>"; };
-		822205451EC42948001C2998 /* KeychainItemStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainItemStoreTests.swift; sourceTree = "<group>"; };
 		822C07B61E85F18600CB61D3 /* AutoLockTimerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoLockTimerController.swift; sourceTree = "<group>"; };
 		822F04C11E5A89A200BA43BC /* PWTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWTestCase.swift; sourceTree = "<group>"; };
 		823A874C1E90670C00E9BD45 /* PassWallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PassWallet-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -124,7 +125,7 @@
 		823B56271ECBD28D0034A9A6 /* BaseCardViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCardViews.swift; sourceTree = "<group>"; };
 		823B56291ECBE44F0034A9A6 /* EditablePasswordCardSectionViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditablePasswordCardSectionViews.swift; sourceTree = "<group>"; tabWidth = 3; };
 		823B562B1ECBEBED0034A9A6 /* EditablePasswordCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditablePasswordCardView.swift; sourceTree = "<group>"; };
-		823B562D1ECC0E2B0034A9A6 /* PasswordEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordEditViewController.swift; sourceTree = "<group>"; };
+		823B562D1ECC0E2B0034A9A6 /* WalletItemEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletItemEditViewController.swift; sourceTree = "<group>"; };
 		823B5F581E592B73008E8BF4 /* AuthenticationManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationManagerTests.swift; sourceTree = "<group>"; };
 		823DCC671ED1759600CD1021 /* SecureNote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureNote.swift; sourceTree = "<group>"; };
 		8240ACFE1EA5EF4F00ACAD2E /* SecureCodeEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureCodeEntry.swift; sourceTree = "<group>"; };
@@ -159,7 +160,7 @@
 		82BDE6031EA2FBDE002007AE /* PassWalletTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PassWalletTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		82BDE6041EA2FBDF002007AE /* KeychainServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainServiceTests.m; sourceTree = "<group>"; };
 		82C45AF41EC1431100068BA1 /* TabBarItemFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarItemFactory.swift; sourceTree = "<group>"; };
-		82C45AF61EC159FB00068BA1 /* PasswordWalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordWalletViewController.swift; sourceTree = "<group>"; };
+		82C45AF61EC159FB00068BA1 /* WalletItemListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletItemListViewController.swift; sourceTree = "<group>"; };
 		82C57A9D1E2C67560081D6F5 /* SettingsViewControllerModelProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewControllerModelProvider.swift; sourceTree = "<group>"; };
 		82C57A9F1E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCellModel.swift; sourceTree = "<group>"; };
 		82C57AA11E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewSectionModel.swift; sourceTree = "<group>"; };
@@ -173,7 +174,7 @@
 		82E7F6931E2DE0C5000E91D3 /* InjectableService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InjectableService.swift; sourceTree = "<group>"; };
 		82E7F6951E2DE12D000E91D3 /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		82E7F6971E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceInterfaceProtocols.swift; sourceTree = "<group>"; };
-		82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordWalletTableViewController.swift; sourceTree = "<group>"; };
+		82E8EBAA1F64CA2300317DF3 /* WalletItemMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletItemMenuViewController.swift; sourceTree = "<group>"; };
 		82ED9FFD1E21C21C0071FBCA /* PassWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PassWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82EDA0001E21C21C0071FBCA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -185,6 +186,9 @@
 		82EDA01C1E21C21D0071FBCA /* PassWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PassWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82EDA0201E21C21D0071FBCA /* PassWalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassWalletUITests.swift; sourceTree = "<group>"; };
 		82EDA0221E21C21D0071FBCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B512C81B20E2B90A0059BB58 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItemReEncryptor.swift; sourceTree = "<group>"; };
+		B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B512C81C20E2B90A0059BB58 /* StoreKit.framework in Frameworks */,
 				824ED0A51F803228004B6492 /* CryptoSwift.framework in Frameworks */,
 				823AF5C61EE3F0EF00CDC7C5 /* Whisper.framework in Frameworks */,
 				823A87511E90673600E9BD45 /* Security.framework in Frameworks */,
@@ -225,21 +230,14 @@
 			name = "Core Test Objects";
 			sourceTree = "<group>";
 		};
-		823A874B1E90656900E9BD45 /* KeyChain */ = {
+		823A874B1E90656900E9BD45 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
 				82DC217C1EA1A10C001BE9F8 /* SwKeychainService.swift */,
 				82BBDC691E91E827007A2C3D /* KeychainService.h */,
 				82BBDC6A1E91E827007A2C3D /* KeychainService.m */,
-				822205441EC42752001C2998 /* KeychainItemCoding.h */,
-				823A874D1E90670C00E9BD45 /* KeychainItem.h */,
-				823A874E1E90670C00E9BD45 /* KeychainItem.m */,
-				82BBDC661E91AF06007A2C3D /* PasswordKeychainItem.h */,
-				82BBDC671E91AF06007A2C3D /* PasswordKeychainItem.m */,
-				823A87551E906EC900E9BD45 /* InternetPasswordKeychainItem.h */,
-				823A87561E906EC900E9BD45 /* InternetPasswordKeychainItem.m */,
 			);
-			name = KeyChain;
+			name = Keychain;
 			sourceTree = "<group>";
 		};
 		825522251E6B96B90056EC34 /* Helpers + Utilities */ = {
@@ -255,6 +253,7 @@
 				828983BA1ED24CF200CD443C /* String+Utilities.swift */,
 				82822D4F1F6648330090D228 /* ClipboardWhisper.swift */,
 				824ED0A71F805C17004B6492 /* UUID+Utilities.swift */,
+				B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */,
 			);
 			name = "Helpers + Utilities";
 			sourceTree = "<group>";
@@ -262,9 +261,9 @@
 		82627D401EC54A2F004C3FB6 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				823A874B1E90656900E9BD45 /* KeyChain */,
+				823A874B1E90656900E9BD45 /* Keychain */,
 				82795ACB1E2328C000DADB38 /* UserPreferencesService.swift */,
-				822205421EC3C073001C2998 /* KeychainItemStore.swift */,
+				822205421EC3C073001C2998 /* WalletItemStore.swift */,
 			);
 			name = Persistence;
 			sourceTree = "<group>";
@@ -272,6 +271,7 @@
 		82A326091E87200F00E53CB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B512C81B20E2B90A0059BB58 /* StoreKit.framework */,
 				824ED0A41F803228004B6492 /* CryptoSwift.framework */,
 				823AF5C11EE3F0DD00CDC7C5 /* Whisper.framework */,
 				823A87501E90673600E9BD45 /* Security.framework */,
@@ -337,9 +337,9 @@
 			isa = PBXGroup;
 			children = (
 				82EDA0021E21C21C0071FBCA /* SettingsTableViewController.swift */,
-				82C45AF61EC159FB00068BA1 /* PasswordWalletViewController.swift */,
-				82E8EBAA1F64CA2300317DF3 /* PasswordWalletTableViewController.swift */,
-				823B562D1ECC0E2B0034A9A6 /* PasswordEditViewController.swift */,
+				82C45AF61EC159FB00068BA1 /* WalletItemListViewController.swift */,
+				82E8EBAA1F64CA2300317DF3 /* WalletItemMenuViewController.swift */,
+				823B562D1ECC0E2B0034A9A6 /* WalletItemEditViewController.swift */,
 				825522211E6B870E0056EC34 /* LoginViewController.swift */,
 				825522231E6B87300056EC34 /* SecureCodeEntryViewController.swift */,
 			);
@@ -349,12 +349,14 @@
 		82E7F69B1E2DEE72000E91D3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B5EE9C9D20DD6D2E00D8957B /* Keychain */,
+				828983BC1ED2A7D800CD443C /* EditFieldValueGenerator.swift */,
 				823DCC671ED1759600CD1021 /* SecureNote.swift */,
 				8240ACFE1EA5EF4F00ACAD2E /* SecureCodeEntry.swift */,
 				82C57A9D1E2C67560081D6F5 /* SettingsViewControllerModelProvider.swift */,
 				82C57A9F1E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift */,
 				82C57AA11E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift */,
-				828983BC1ED2A7D800CD443C /* EditFieldValueGenerator.swift */,
+				B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -428,7 +430,6 @@
 				82795ACD1E23432B00DADB38 /* UserPreferencesServiceTests.swift */,
 				823B5F581E592B73008E8BF4 /* AuthenticationManagerTests.swift */,
 				82BDE6041EA2FBDF002007AE /* KeychainServiceTests.m */,
-				822205451EC42948001C2998 /* KeychainItemStoreTests.swift */,
 				82BDE6031EA2FBDE002007AE /* PassWalletTests-Bridging-Header.h */,
 				82EDA0171E21C21D0071FBCA /* Info.plist */,
 			);
@@ -442,6 +443,20 @@
 				82EDA0221E21C21D0071FBCA /* Info.plist */,
 			);
 			path = PassWalletUITests;
+			sourceTree = "<group>";
+		};
+		B5EE9C9D20DD6D2E00D8957B /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				822205441EC42752001C2998 /* KeychainItemCoding.h */,
+				823A874D1E90670C00E9BD45 /* KeychainItem.h */,
+				823A874E1E90670C00E9BD45 /* KeychainItem.m */,
+				82BBDC661E91AF06007A2C3D /* PasswordKeychainItem.h */,
+				82BBDC671E91AF06007A2C3D /* PasswordKeychainItem.m */,
+				823A87551E906EC900E9BD45 /* InternetPasswordKeychainItem.h */,
+				823A87561E906EC900E9BD45 /* InternetPasswordKeychainItem.m */,
+			);
+			name = Keychain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -513,7 +528,7 @@
 				TargetAttributes = {
 					82ED9FFC1E21C21C0071FBCA = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 8Q5QPE47Q2;
+						DevelopmentTeam = FAU9A6XRWZ;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -588,12 +603,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82E8EBAB1F64CA2300317DF3 /* PasswordWalletTableViewController.swift in Sources */,
+				82E8EBAB1F64CA2300317DF3 /* WalletItemMenuViewController.swift in Sources */,
 				825522241E6B87300056EC34 /* SecureCodeEntryViewController.swift in Sources */,
 				82BBDC681E91AF06007A2C3D /* PasswordKeychainItem.m in Sources */,
 				823DCC681ED1759600CD1021 /* SecureNote.swift in Sources */,
 				82EDA0031E21C21C0071FBCA /* SettingsTableViewController.swift in Sources */,
-				82C45AF71EC159FB00068BA1 /* PasswordWalletViewController.swift in Sources */,
+				82C45AF71EC159FB00068BA1 /* WalletItemListViewController.swift in Sources */,
 				82A326121E8745D800E53CB2 /* main.swift in Sources */,
 				82E7F6981E2DE1C5000E91D3 /* ServiceInterfaceProtocols.swift in Sources */,
 				82C45AF51EC1431100068BA1 /* TabBarItemFactory.swift in Sources */,
@@ -603,6 +618,7 @@
 				8240ACFF1EA5EF4F00ACAD2E /* SecureCodeEntry.swift in Sources */,
 				82627D3F1EC54A23004C3FB6 /* PasswordSummaryCardCellView.swift in Sources */,
 				82446E511E88C92C003B9010 /* DirectedGraphStateMachine.swift in Sources */,
+				B5EE9C9F20DD6D5B00D8957B /* WalletItem.swift in Sources */,
 				82BBDC6B1E91E827007A2C3D /* KeychainService.m in Sources */,
 				824ED0A81F805C17004B6492 /* UUID+Utilities.swift in Sources */,
 				823B562C1ECBEBED0034A9A6 /* EditablePasswordCardView.swift in Sources */,
@@ -610,11 +626,12 @@
 				821566FF1E21CFE70038D079 /* PWAppearance.swift in Sources */,
 				823B56281ECBD28D0034A9A6 /* BaseCardViews.swift in Sources */,
 				82E369F91FD1E6F1008B3732 /* CryptoString.swift in Sources */,
+				B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */,
 				826A46FA1E3ECBBE0055ED3D /* AuthenticationSessionManager.swift in Sources */,
 				82C57AA01E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift in Sources */,
 				823A87571E906EC900E9BD45 /* InternetPasswordKeychainItem.m in Sources */,
 				825522271E6B97180056EC34 /* UIFont+FontDescriptorTraits.swift in Sources */,
-				822205431EC3C073001C2998 /* KeychainItemStore.swift in Sources */,
+				822205431EC3C073001C2998 /* WalletItemStore.swift in Sources */,
 				825522291E6B97B50056EC34 /* PWConstraint.swift in Sources */,
 				82795ACC1E2328C000DADB38 /* UserPreferencesService.swift in Sources */,
 				82EDA0011E21C21C0071FBCA /* AppDelegate.swift in Sources */,
@@ -628,7 +645,7 @@
 				82C57AA21E2C6DF30081D6F5 /* SettingsTableViewSectionModel.swift in Sources */,
 				828983BB1ED24CF200CD443C /* String+Utilities.swift in Sources */,
 				828983BD1ED2A7D800CD443C /* EditFieldValueGenerator.swift in Sources */,
-				823B562E1ECC0E2B0034A9A6 /* PasswordEditViewController.swift in Sources */,
+				823B562E1ECC0E2B0034A9A6 /* WalletItemEditViewController.swift in Sources */,
 				82E7F6921E2DE080000E91D3 /* ClientDependency.swift in Sources */,
 				82B137121E8B343A0062F8E6 /* SecureCodeEntryManager.swift in Sources */,
 				82E041E61E6CBC9900E801DA /* PinDigitView.swift in Sources */,
@@ -647,7 +664,6 @@
 				823B5F591E592B73008E8BF4 /* AuthenticationManagerTests.swift in Sources */,
 				82BDE6051EA2FBDF002007AE /* KeychainServiceTests.m in Sources */,
 				822F04C21E5A89A200BA43BC /* PWTestCase.swift in Sources */,
-				822205461EC42948001C2998 /* KeychainItemStoreTests.swift in Sources */,
 				82795ACE1E23432B00DADB38 /* UserPreferencesServiceTests.swift in Sources */,
 				82E0134B1E555FD600E54779 /* MockPinCodeHandler.swift in Sources */,
 				82E0134F1E55664100E54779 /* MockTouchIdService.swift in Sources */,
@@ -788,18 +804,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PassWallet/PassWallet.entitlements;
-				DEVELOPMENT_TEAM = 8Q5QPE47Q2;
+				DEVELOPMENT_TEAM = FAU9A6XRWZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = PassWallet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = abhaycuram.PassWallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "PassWallet/PassWallet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -809,17 +827,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PassWallet/PassWallet.entitlements;
-				DEVELOPMENT_TEAM = 8Q5QPE47Q2;
+				DEVELOPMENT_TEAM = FAU9A6XRWZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = PassWallet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = abhaycuram.PassWallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "PassWallet/PassWallet-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -120,12 +120,7 @@ public class AuthenticationSessionManager : NSObject, ClientDependency, Directed
         switch state {
             
         case .authenticating:
-            let touchIdPolicyResult = touchIDService.canDeviceCollectFingerPrint()
-            if userPreferencesService.didUserEnableTouchId() && touchIdPolicyResult.collectable {
-                stateToTransitionToo = .verifyingFingerPrint
-            } else {
-                stateToTransitionToo = .verifyingUserPin
-            }
+            stateToTransitionToo = .verifyingUserPin
             break
             
         case .verifyingFingerPrint:
@@ -141,8 +136,14 @@ public class AuthenticationSessionManager : NSObject, ClientDependency, Directed
                         let authError = unwrappedError as NSError
                         if authError.code == LAError.authenticationFailed.rawValue {
                             strongSelf.transitionToState(state: .verifyingFingerPrint)
+                        } else if authError.code == LAError.userCancel.rawValue {
+                            strongSelf.transitionToState(state: .authenticationFailed)
+                        } else if authError.code == -6 {
+                            //User cancelled Face ID
+                            strongSelf.userPreferencesService.update2FAStatus(enabled: false)
+                            strongSelf.transitionToState(state: .fingerPrintVerified)
                         } else {
-                            strongSelf.transitionToState(state: .verifyingUserPin)
+                            strongSelf.transitionToState(state: .authenticationFailed)
                         }
                     }
                 }
@@ -153,7 +154,7 @@ public class AuthenticationSessionManager : NSObject, ClientDependency, Directed
             return
             
         case .fingerPrintVerified:
-            stateToTransitionToo = (userPreferencesService.didUserEnable2FAWithPin()) ? .verifyingUserPin : .authenticated
+            stateToTransitionToo = .authenticated
             break
             
         default:
@@ -169,15 +170,15 @@ public class AuthenticationSessionManager : NSObject, ClientDependency, Directed
     {
         switch forState {
         case .verifyingFingerPrint:
-            return [ .authenticating, .verifyingFingerPrint]
+            return [ .authenticating, .verifyingUserPin, .verifyingFingerPrint]
         case .fingerPrintVerified:
             return [ .verifyingFingerPrint]
         case .verifyingUserPin:
-            return [ .authenticating, .verifyingFingerPrint, .fingerPrintVerified]
+            return [ .authenticating]
         case .authenticated:
             return [ .fingerPrintVerified, .verifyingUserPin]
         case .authenticationFailed:
-            return [ .verifyingUserPin]
+            return [ .verifyingUserPin, .verifyingFingerPrint]
         default:
             return [AuthenticationState]()
         }
@@ -187,7 +188,11 @@ public class AuthenticationSessionManager : NSObject, ClientDependency, Directed
     public func pinVerified()
     {
         if isCurrentStateVerifyingUserPin() == true {
-            transitionToState(state: .authenticated)
+            if userPreferencesService.didUserEnable2FA() && touchIDService.canDeviceCollectFingerPrint().collectable {
+                transitionToState(state: .verifyingFingerPrint)
+            } else {
+                transitionToState(state: .authenticated)
+            }
         }
     }
     

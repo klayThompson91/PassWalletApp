@@ -115,7 +115,7 @@ public class LoginViewController : ClientDependencyViewController, SecureCodeEnt
         return [KeychainServiceInterface.self]
     }
     
-    override public func injectDependencies(dependencies: [InjectableService])
+     override public func injectDependencies(dependencies: [InjectableService])
     {
         for dependency in dependencies {
             if dependency is KeychainServiceInterface {

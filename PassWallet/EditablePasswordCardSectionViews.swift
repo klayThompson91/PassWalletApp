@@ -17,13 +17,16 @@ public class EditableMultiLineSectionView: UIView, UITextViewDelegate {
     
     public private(set) var titleLabel = UILabel(frame: .zero)
     public private(set) var textView = UITextView(frame: .zero)
+    
     private var textViewHeightConstraint = NSLayoutConstraint()
+    private var multiLineSectionTapGestureRecognizer = UITapGestureRecognizer()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         titleLabel.numberOfLines = 1
         titleLabel.textColor = UIColor(colorLiteralRed: 145/255, green: 155/255, blue: 150/255, alpha: 1.0)
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = UIFont.systemFont(ofSize: 14)
+        titleLabel.isUserInteractionEnabled = true
         textView.isScrollEnabled = false
         textView.backgroundColor = UIColor.clear
         textView.font = UIFont.systemFont(ofSize: 16)
@@ -31,6 +34,9 @@ public class EditableMultiLineSectionView: UIView, UITextViewDelegate {
         textView.delegate = self
         addSubviews([titleLabel, textView])
         setupConstraints()
+        
+        multiLineSectionTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(multiLineTextSectionTapped(_:)))
+        titleLabel.addGestureRecognizer(multiLineSectionTapGestureRecognizer)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -93,6 +99,12 @@ public class EditableMultiLineSectionView: UIView, UITextViewDelegate {
         constraints.append(textView.rightAnchor.constraint(equalTo: self.rightAnchor))
         NSLayoutConstraint.activate(constraints)
     }
+    
+    @objc private func multiLineTextSectionTapped(_ sender: UITapGestureRecognizer) {
+        if !textView.isFirstResponder {
+            textView.becomeFirstResponder()
+        }
+    }
 }
 
 public class EditableFieldSectionView: UIView {
@@ -117,13 +129,15 @@ public class EditableFieldSectionView: UIView {
         }
     }
     
+    private var fieldTapGestureRecognizer = UITapGestureRecognizer()
     private var previouslyAppliedTextFieldLeftAnchorConstraint = [NSLayoutConstraint]()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         titleLabel.numberOfLines = 1
         titleLabel.textColor = UIColor(colorLiteralRed: 145/255, green: 155/255, blue: 150/255, alpha: 1.0)
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = UIFont.systemFont(ofSize: 14)
+        titleLabel.isUserInteractionEnabled = true
         textField.font = UIFont.systemFont(ofSize: 16)
         supplementaryButton.backgroundColor = UIColor.clear
         supplementaryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
@@ -132,6 +146,9 @@ public class EditableFieldSectionView: UIView {
         dividerView.backgroundColor = UIColor(colorLiteralRed: 216/255, green: 216/255, blue: 216/255, alpha: 1.0)
         self.addSubviews([titleLabel, textField, supplementaryButton, dividerView])
         setupConstraints()
+        
+        fieldTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(fieldLabelTapped(_:)))
+        titleLabel.addGestureRecognizer(fieldTapGestureRecognizer)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -165,6 +182,12 @@ public class EditableFieldSectionView: UIView {
         constraints.append(dividerView.rightAnchor.constraint(equalTo: self.rightAnchor))
         constraints.append(dividerView.heightAnchor.constraint(equalToConstant: 0.5))
         NSLayoutConstraint.activate(constraints + previouslyAppliedTextFieldLeftAnchorConstraint)
+    }
+    
+    @objc private func fieldLabelTapped(_ sender: UITapGestureRecognizer) {
+        if !textField.isFirstResponder {
+            textField.becomeFirstResponder()
+        }
     }
     
 }
