@@ -22,7 +22,7 @@ public class EditFieldValueGenerator {
     
     public init(_ keychainItem: KeychainItem?, secureNote: SecureNote) {
         if let internetPassword = keychainItem as? InternetPasswordKeychainItem {
-            labelValues = ["Website", "Email/Username", "Password", "Secure Note"]
+            labelValues = ["Website URL", "Email/Username", "Password", "Secure Note"]
             fieldValues = fieldValuesFrom(internetPassword, secureNote: secureNote)
         } else if let genericPassword = keychainItem as? PasswordKeychainItem {
             labelValues = ["Title", "Description", "Password", "Secure Note"]

@@ -9,6 +9,17 @@
 import Foundation
 import CryptoSwift
 
+fileprivate struct SecureNoteCopy {
+    fileprivate var title: String
+    fileprivate var text: String
+}
+
+fileprivate struct WalletItemCopy {
+    fileprivate var keychainItem: KeychainItem?
+    fileprivate var secureNote: SecureNoteCopy?
+    fileprivate var itemType: WalletItemType
+}
+
 /**
  * Use SecureCodeEntryManager to manage a secureCode entry for PassWallet.
  * Depending on the context provided, the SecureCodeEntryManager will take
@@ -137,13 +148,24 @@ public class SecureCodeEntryManager: DirectedGraphStateMachine, ClientDependency
             
         case .secureCodeVerified:
             
-            let credentials = PWCredentials()
-            //generate a brand new master salt
-            let masterSalt = credentials.randomSalt
-            //derive a new key (master password) from the new secure code and master salt
-            let masterPassword = credentials.derivePasswordHash(password: secureCode, salt: masterSalt)
-            //update the iOS keychain with the new application master password and salt
-            credentials.update(password: masterPassword, salt: masterSalt)
+            if stateMachineContext != .authenticate {
+                
+                //The master pin has been changed so lets first get a copy of all current wallet items
+                let reEncryptor = WalletItemReEncryptor()
+                reEncryptor.read()
+                
+                let credentials = PWCredentials()
+                //generate a brand new master salt
+                let masterSalt = credentials.randomSalt
+                //derive a new key (master password) from the new secure code and master salt
+                let masterPassword = credentials.derivePasswordHash(password: secureCode, salt: masterSalt)
+                //update the iOS keychain with the new application master password and salt
+                credentials.update(password: masterPassword, salt: masterSalt)
+                
+                //We have successfully updated the master password and salt so lets go ahead and
+                //re-encrypt all of our data and write it to the file system
+                reEncryptor.write()
+            }
             
             clearSecureCodes()
             return

@@ -22,16 +22,14 @@ public class SettingsViewControllerModelProvider: ClientDependency
     private var touchIdService: TouchIDServiceInterface!
     
     private let modelDictionary = [ [Constants.sectionHeaderKey : "AUTHENTICATION",
-                                     Constants.cellTitlesKey : ["Change passcode", "Enable Touch-ID", "Always require passcode"], ],
+                                     Constants.cellTitlesKey : ["Change passcode", "Enable Two Factor Auth"],
+                                     Constants.sectionFooterKey: "Enable two factor authentication for more security. Two Factor Auth uses your iPhone's Touch ID or Face ID as a secondary password."],
                                     [Constants.sectionHeaderKey : "SECURITY",
                                      Constants.cellTitlesKey : ["Auto-Lockout", "Lock on exit"]],
                                     [Constants.sectionHeaderKey : "DATA",
                                      Constants.cellTitlesKey : ["Reset settings",
-                                                                "Clear wallet passwords",
-                                                                "Reset wallet passwords and settings"],
-                                     Constants.sectionFooterKey : "Changing settings in the Security section will require you to authenticate again"],
-                                    [Constants.sectionHeaderKey : "GENERAL",
-                                     Constants.cellTitlesKey : ["Share with friends", "Rate PassWallet"], ] ]
+                                                                "Clear all passwords",
+                                                                "Clear all secure notes"]]]
     
     
     /// MARK: Public Methods
@@ -70,11 +68,7 @@ public class SettingsViewControllerModelProvider: ClientDependency
                 if !touchIdService.canDeviceCollectFingerPrint().collectable {
                     sectionModel.numRows = 1
                 } else {
-                    if userPreferencesService.didUserEnableTouchId() {
-                        sectionModel.numRows = cellCollection.count
-                    } else {
-                        sectionModel.numRows = 2
-                    }
+                    sectionModel.numRows = 2
                 }
             } else {
                 sectionModel.numRows = cellCollection.count
@@ -95,9 +89,7 @@ public class SettingsViewControllerModelProvider: ClientDependency
             if indexPath.row == 0 {
                 cellModel.accessoryViewAttributes = arrowAccessoryViewAttributes()
             } else if indexPath.row == 1 {
-                cellModel.accessoryViewAttributes = switchAccessoryViewAttributes(isSwitchEnabled: userPreferencesService.didUserEnableTouchId())
-            } else if indexPath.row == 2 {
-                cellModel.accessoryViewAttributes = switchAccessoryViewAttributes(isSwitchEnabled: userPreferencesService.didUserEnable2FAWithPin())
+                cellModel.accessoryViewAttributes = switchAccessoryViewAttributes(isSwitchEnabled: userPreferencesService.didUserEnable2FA())
             }
         } else if (indexPath.section == 1) {
             cellModel.accessoryViewAttributes = (indexPath.row == 0) ? segmentedControlAccessoryViewAttributes() : switchAccessoryViewAttributes(isSwitchEnabled: userPreferencesService.shouldLockOnExit())

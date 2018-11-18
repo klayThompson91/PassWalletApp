@@ -16,6 +16,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     private var tableView = UITableView(frame: CGRect.zero, style: .grouped)
     private var tableViewModelProvider = SettingsViewControllerModelProvider()
     private var userPreferencesService: UserPreferencesServiceInterface!
+    private var keychainService: KeychainServiceInterface!
     
     private struct Constants
     {
@@ -25,13 +26,16 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     /// MARK: Public methods
     /// Dependency Injection
     override public func serviceDependencies() -> [Any.Type] {
-        return [UserPreferencesServiceInterface.self]
+        return [UserPreferencesServiceInterface.self, KeychainServiceInterface.self]
     }
     
     override public func injectDependencies(dependencies: [InjectableService]) {
         for dependency in dependencies {
             if dependency is UserPreferencesServiceInterface {
                 userPreferencesService = dependency as? UserPreferencesServiceInterface
+            }
+            if dependency is KeychainServiceInterface {
+                keychainService = dependency as? KeychainServiceInterface
             }
         }
     }
@@ -67,7 +71,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
 
     /// MARK: TableViewDelegate + Data Source
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return 4;
+        return 3;
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,7 +84,23 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return (section == 0) ? 60 : 45
+        return 45
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 && tableViewModelProvider.groupSectionModelForIndexPath(indexPath: IndexPath(row: 0, section: section)).numRows == 2 {
+            let indexPath = IndexPath(row: 0, section: section)
+            let sizingLabel = UILabel()
+            sizingLabel.font = UIFont.systemFont(ofSize: 13)
+            sizingLabel.numberOfLines = 0
+            sizingLabel.lineBreakMode = .byWordWrapping
+            sizingLabel.text = tableViewModelProvider.groupSectionModelForIndexPath(indexPath: indexPath).footerTitle
+            sizingLabel.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: CGFloat.greatestFiniteMagnitude)
+            sizingLabel.sizeToFit()
+            return sizingLabel.bounds.height + 15
+        }
+        
+        return 0
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -88,11 +108,26 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
         return headerView
     }
     
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UITableViewHeaderFooterView()
+        return footerView
+    }
+    
     public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as? UITableViewHeaderFooterView
         let indexPath = IndexPath(row: 0, section: section)
         headerView?.textLabel?.textColor = pwStyle.appThemeColor
         headerView?.textLabel?.text = tableViewModelProvider.groupSectionModelForIndexPath(indexPath: indexPath).headerTitle
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        if section == 0 && tableViewModelProvider.groupSectionModelForIndexPath(indexPath: IndexPath(row: 0, section: section)).numRows == 2 {
+            let headerView = view as! UITableViewHeaderFooterView
+            let indexPath = IndexPath(row: 0, section: section)
+            headerView.textLabel?.font = UIFont.systemFont(ofSize: 13)
+            headerView.textLabel?.adjustsFontForContentSizeCategory = true
+            headerView.textLabel?.text = tableViewModelProvider.groupSectionModelForIndexPath(indexPath: indexPath).footerTitle
+        }
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -113,11 +148,51 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2 && indexPath.row == 0 {
-            userPreferencesService.restoreStandardPreferences()
-            tableView.reloadSections(IndexSet([0, 1]), with: .fade)
-        } else if indexPath.section == 0 && indexPath.row == 0 {
-            present(SecureCodeEntryViewController.navigationController(context: .changeSecureCode, secureCodeEntryType: .pin, secureCodeEntryLength: .fourDigitCode, delegate: self), animated: true, completion: nil)
+        if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                userPreferencesService.restoreStandardPreferences()
+                tableView.reloadSections(IndexSet([0, 1]), with: .fade)
+            } else if indexPath.row == 1 {
+                let alertController = UIAlertController(title: "Are you sure?", message: "By tapping yes you will delete all your passwords in PassWallet. These can not be recovered again.", preferredStyle: .alert)
+                
+                alertController.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] (_) in
+                    if let strongSelf = self {
+                        let currentPassword = PWCredentials().currentPassword
+                        let currentSalt = PWCredentials().currentSalt
+                        strongSelf.keychainService.clearPasswordKeychainItems()
+                        strongSelf.keychainService.clearInternetPasswordKeychainItems()
+                        PWCredentials().update(password: currentPassword!, salt: currentSalt!)
+                        let currentItemStoreType = WalletItemStore.shared.itemType
+                        WalletItemStore.shared.itemType = .genericPasswords
+                        let _ = WalletItemStore.shared.clear()
+                        WalletItemStore.shared.itemType = .webPasswords
+                        let _ = WalletItemStore.shared.clear()
+                        WalletItemStore.shared.itemType = currentItemStoreType
+                        NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
+                    }
+                }))
+                
+                alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+                
+                let alertController = UIAlertController(title: "Are you sure?", message: "By tapping yes you will delete all your secure notes in PassWallet. These can not be recovered again.", preferredStyle: .alert)
+                
+                alertController.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
+                    let currentItemStoreType = WalletItemStore.shared.itemType
+                    WalletItemStore.shared.itemType = .secureNotes
+                    let _ = WalletItemStore.shared.clear()
+                    WalletItemStore.shared.itemType = currentItemStoreType
+                    NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
+                }))
+                
+                alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+            }
+        } else if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                present(SecureCodeEntryViewController.navigationController(context: .changeSecureCode, secureCodeEntryType: .pin, secureCodeEntryLength: .fourDigitCode, delegate: self), animated: true, completion: nil)
+            }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -128,6 +203,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     {
         tableView.rowHeight = 45
         tableView.sectionFooterHeight = 0
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 0.01))
         tableView.isScrollEnabled = true
         tableView.showsVerticalScrollIndicator = false
         tableView.bounces = true
@@ -183,10 +259,6 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     {
         if indexPath.section == 0 {
             if indexPath.row == 1 {
-                //touchID
-                switchControl.addTarget(self, action: #selector(touchIDSwitchControlValueDidChange(_:)), for: .valueChanged)
-                return
-            } else {
                 //2FA
                 switchControl.addTarget(self, action: #selector(_2FASwitchControlValueDidChange(_:)), for: .valueChanged)
                 return
@@ -206,18 +278,10 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
         }
     }
     
-    @objc private func touchIDSwitchControlValueDidChange(_ switchControl: UISwitch)
-    {
-        userPreferencesService.updateTouchIdStatus(enabled: switchControl.isOn)
-        if !switchControl.isOn {
-            userPreferencesService.update2FAAdditionallyRequirePin(enabled: false)
-        }
-        tableView.reloadSections(IndexSet(integer: 0), with: .fade)
-    }
     
     @objc private func _2FASwitchControlValueDidChange(_ switchControl: UISwitch)
     {
-        userPreferencesService.update2FAAdditionallyRequirePin(enabled: switchControl.isOn)
+        userPreferencesService.update2FAStatus(enabled: switchControl.isOn)
     }
     
     @objc private func lockOnExitSwitchControlValueDidChange(_ switchControl: UISwitch)

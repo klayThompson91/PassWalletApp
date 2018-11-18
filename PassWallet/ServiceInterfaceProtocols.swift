@@ -15,10 +15,8 @@ public protocol UserPreferencesServiceInterface : InjectableService
     func autoLockTimerStartTimestamp() -> CFTimeInterval
     func updateShouldLockOnExitStatus(enabled: Bool)
     func shouldLockOnExit() -> Bool
-    func updateTouchIdStatus(enabled: Bool)
-    func didUserEnableTouchId() -> Bool
-    func update2FAAdditionallyRequirePin(enabled: Bool)
-    func didUserEnable2FAWithPin() -> Bool
+    func didUserEnable2FA() -> Bool
+    func update2FAStatus(enabled: Bool)
     func updateAutoLockTimeout(timeout: AutoLockTimeout)
     func autoLockTimeout() -> AutoLockTimeout?
     func clearPreferences()

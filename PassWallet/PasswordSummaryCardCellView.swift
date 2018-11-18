@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 
 public protocol PasswordSummaryCardCellViewDelegate: class {
-    func moreActionsButtonWasTapped(for keychainItem: PasswordKeychainItem)
+    func moreActionsButtonWasTapped(for walletItem: WalletItem, button: UIButton)
 }
 
 public class PasswordSummaryCardCellView : CardCellView {
     
-    public var keychainItem: KeychainItem {
+    public var walletItem: WalletItem {
         didSet {
-            updateViewState(with: keychainItem)
+            updateViewState(with: walletItem)
             setNeedsUpdateConstraints()
         }
     }
@@ -38,26 +38,30 @@ public class PasswordSummaryCardCellView : CardCellView {
     private struct Constants {
         static let genericPasswordImage = UIImage(named: "GenericPassword Icon")
         static let internetPasswordImage = UIImage(named: "InternetPassword Icon")
+        static let secureNoteImage = UIImage(named: "SecureNote Icon")
         static let moreActionsImage = UIImage(named: "MoreActions Icon")
     }
     
     public override convenience init(frame: CGRect) {
         let emptyKeychainItem = InternetPasswordKeychainItem(password: "", accountName: "abhaycuram@gmail.com", website: URL(string: "Facebook.com")!)
-        self.init(frame: frame, keychainItem: emptyKeychainItem, delegate: nil)
+        let emptyWalletItem = WalletItem(keychainItem: emptyKeychainItem, secureNote: SecureNote.emptyNote(), itemType: .webPasswords)
+        self.init(frame: frame, walletItem: emptyWalletItem, delegate: nil)
     }
     
-    public init(frame: CGRect, keychainItem: KeychainItem, delegate: PasswordSummaryCardCellViewDelegate?)
+    public init(frame: CGRect, walletItem: WalletItem, delegate: PasswordSummaryCardCellViewDelegate?)
     {
         self.delegate = delegate
-        self.keychainItem = keychainItem
+        self.walletItem = walletItem
         super.init(frame: frame)
         
         self.titleLabel.numberOfLines = 1
         self.titleLabel.textColor = UIColor.black
-        self.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightRegular)
+        self.titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        self.titleLabel.adjustsFontForContentSizeCategory = true
         self.subtitleLabel.numberOfLines = 1
         self.subtitleLabel.textColor = UIColor(colorLiteralRed: 100/255, green: 110/255, blue: 105/255, alpha: 1.0)
-        self.subtitleLabel.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+        self.subtitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+        self.subtitleLabel.adjustsFontForContentSizeCategory = true
         self.moreActionsButton.addTarget(self, action: #selector(handleMoreActionsButtonTap(_ :)), for: .touchUpInside)
         
         self.addSubviews([titleLabel, subtitleLabel, passwordTypeImageView, moreActionsButton])
@@ -69,20 +73,24 @@ public class PasswordSummaryCardCellView : CardCellView {
     }
     
     @objc private func handleMoreActionsButtonTap(_ sender: UIButton) {
-        if let observer = delegate, let passwordKeychainItem = keychainItem as? PasswordKeychainItem {
-            observer.moreActionsButtonWasTapped(for: passwordKeychainItem)
+        if let observer = delegate {
+            observer.moreActionsButtonWasTapped(for: walletItem, button: sender)
         }
     }
     
-    private func updateViewState(with newKeychainItem: KeychainItem) {
-        if let internetPassword = newKeychainItem as? InternetPasswordKeychainItem {
+    private func updateViewState(with newWalletItem: WalletItem) {
+        if newWalletItem.itemType == .webPasswords, let internetPassword = newWalletItem.keychainItem as? InternetPasswordKeychainItem {
             self.titleLabel.text = internetPassword.website.absoluteString
             self.subtitleLabel.text = internetPassword.accountName
             self.passwordTypeImageView.image = Constants.internetPasswordImage
-        } else if let genericPassword = newKeychainItem as? PasswordKeychainItem {
+        } else if newWalletItem.itemType == .genericPasswords, let genericPassword = newWalletItem.keychainItem as? PasswordKeychainItem {
             self.titleLabel.text = genericPassword.identifier
             self.subtitleLabel.text = genericPassword.itemDescription
             self.passwordTypeImageView.image = Constants.genericPasswordImage
+        } else if newWalletItem.itemType == .secureNotes, let secureNote = newWalletItem.secureNote {
+            self.titleLabel.text = secureNote.title
+            self.subtitleLabel.text = ""
+            self.passwordTypeImageView.image = Constants.secureNoteImage
         }
         
         self.moreActionsButton.setBackgroundImage(Constants.moreActionsImage, for: .normal)

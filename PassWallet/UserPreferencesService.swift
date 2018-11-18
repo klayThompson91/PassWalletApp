@@ -18,16 +18,16 @@ import UIKit
  */
 public class UserPreferencesService: InjectableService, UserPreferencesServiceInterface
 {
+    
     private struct Constants
     {
         static let keyPrefix = "PassWallet"
         static let timestampSuffix = "Timestamp"
-        static let touchIdKey = "\(Constants.keyPrefix)_TouchId"
         static let autoLockKey = "\(Constants.keyPrefix)_AutoLockTimeout"
         static let autoLockTimerStartTimestampKey = "\(Constants.keyPrefix)_AutoLockTimerStart_\(Constants.timestampSuffix)"
         static let appBecameInactiveTimestampKey = "\(Constants.keyPrefix)_AppBecameInactive_\(Constants.timestampSuffix)"
         static let passcodeKey = "\(Constants.keyPrefix)_Passcode"
-        static let twoFactorAuthWithPinKey = "\(Constants.keyPrefix)_2FA_withPin"
+        static let twoFactorAuthEnabledKey = "\(Constants.keyPrefix)_2FA"
         static let applicationThemeKey = "\(Constants.keyPrefix)_AppColorTheme"
         static let usernameKey = "\(Constants.keyPrefix)_Username"
         static let lockAppOnExitKey = "\(Constants.keyPrefix)_LockAppOnExit"
@@ -74,25 +74,13 @@ public class UserPreferencesService: InjectableService, UserPreferencesServiceIn
         return userDefaults.bool(forKey: Constants.lockAppOnExitKey)
     }
     
-    public func updateTouchIdStatus(enabled: Bool)
-    {
-        userDefaults.removeObject(forKey: Constants.touchIdKey)
-        userDefaults.set(enabled, forKey: Constants.touchIdKey)
+    public func didUserEnable2FA() -> Bool {
+        return userDefaults.bool(forKey: Constants.twoFactorAuthEnabledKey)
     }
     
-    public func didUserEnableTouchId() -> Bool
-    {
-        return userDefaults.bool(forKey: Constants.touchIdKey)
-    }
-    
-    public func update2FAAdditionallyRequirePin(enabled: Bool) {
-        userDefaults.removeObject(forKey: Constants.twoFactorAuthWithPinKey)
-        userDefaults.set(enabled, forKey: Constants.twoFactorAuthWithPinKey)
-    }
-    
-    public func didUserEnable2FAWithPin() -> Bool {
-        let enabled = userDefaults.bool(forKey: Constants.twoFactorAuthWithPinKey)
-        return enabled
+    public func update2FAStatus(enabled: Bool) {
+        userDefaults.removeObject(forKey: Constants.twoFactorAuthEnabledKey)
+        userDefaults.set(enabled, forKey: Constants.twoFactorAuthEnabledKey)
     }
     
     public func updateAutoLockTimeout(timeout: AutoLockTimeout)
@@ -128,14 +116,11 @@ public class UserPreferencesService: InjectableService, UserPreferencesServiceIn
     private func loadStandardDefaults()
     {
         let currentDefaults = userDefaults.dictionaryRepresentation()
-        if currentDefaults[Constants.touchIdKey] == nil {
-            updateTouchIdStatus(enabled: true)
-        }
         if currentDefaults[Constants.autoLockKey] == nil {
             updateAutoLockTimeout(timeout: .twoMinutes)
         }
-        if currentDefaults[Constants.twoFactorAuthWithPinKey] == nil {
-            update2FAAdditionallyRequirePin(enabled: false)
+        if currentDefaults[Constants.twoFactorAuthEnabledKey] == nil {
+            update2FAStatus(enabled: true)
         }
         if currentDefaults[Constants.lockAppOnExitKey] == nil {
             updateShouldLockOnExitStatus(enabled: false)

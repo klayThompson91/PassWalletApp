@@ -1,0 +1,4 @@
+framework module Whisper {
+    header "Whisper-Swift.h"
+    requires objc
+}

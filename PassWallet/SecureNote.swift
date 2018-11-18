@@ -21,7 +21,7 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
     public var text: String {
         get {
             guard let decryptedText = CipherString(string: _text, iv: ivHash).decrypt else {
-                assertionFailure("SecureNote decryption error for Text")
+                 assertionFailure("SecureNote decryption error for Text")
                 return ""
             }
             
@@ -112,6 +112,21 @@ public class SecureNote : NSObject, NSCoding, ClientDependency {
                 keychainService = dependency as? KeychainServiceInterface
             }
         }
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let anyObject = object as AnyObject? {
+            if anyObject is SecureNote {
+                if self === anyObject { return true }
+                return isEqualToSecureNote(anyObject as! SecureNote)
+            }
+        }
+        
+        return false
+    }
+    
+    public func isEqualToSecureNote(_ secureNote: SecureNote) -> Bool {
+        return self.title == secureNote.title && self.text == secureNote.text && self.noteID == secureNote.noteID
     }
     
 }
