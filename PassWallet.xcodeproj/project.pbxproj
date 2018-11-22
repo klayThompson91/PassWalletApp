@@ -74,6 +74,8 @@
 		82EDA0211E21C21D0071FBCA /* PassWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0201E21C21D0071FBCA /* PassWalletUITests.swift */; };
 		B512C81C20E2B90A0059BB58 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B512C81B20E2B90A0059BB58 /* StoreKit.framework */; };
 		B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */; };
+		B5512FEB21A227E8000D6BF7 /* AlertControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */; };
+		B5DAE81021A2681100077A53 /* ExpandedTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAE80F21A2681100077A53 /* ExpandedTapAreaButton.swift */; };
 		B5EE9C9F20DD6D5B00D8957B /* WalletItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -188,6 +190,8 @@
 		82EDA0221E21C21D0071FBCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B512C81B20E2B90A0059BB58 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItemReEncryptor.swift; sourceTree = "<group>"; };
+		B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertControllerFactory.swift; sourceTree = "<group>"; };
+		B5DAE80F21A2681100077A53 /* ExpandedTapAreaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedTapAreaButton.swift; sourceTree = "<group>"; };
 		B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -254,6 +258,7 @@
 				82822D4F1F6648330090D228 /* ClipboardWhisper.swift */,
 				824ED0A71F805C17004B6492 /* UUID+Utilities.swift */,
 				B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */,
+				B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */,
 			);
 			name = "Helpers + Utilities";
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 				823B56291ECBE44F0034A9A6 /* EditablePasswordCardSectionViews.swift */,
 				828527281E7C8EEE008D6C71 /* PinEntryTextField.swift */,
 				82C45AF41EC1431100068BA1 /* TabBarItemFactory.swift */,
+				B5DAE80F21A2681100077A53 /* ExpandedTapAreaButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -630,6 +636,8 @@
 				826A46FA1E3ECBBE0055ED3D /* AuthenticationSessionManager.swift in Sources */,
 				82C57AA01E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift in Sources */,
 				823A87571E906EC900E9BD45 /* InternetPasswordKeychainItem.m in Sources */,
+				B5512FEB21A227E8000D6BF7 /* AlertControllerFactory.swift in Sources */,
+				B5DAE81021A2681100077A53 /* ExpandedTapAreaButton.swift in Sources */,
 				825522271E6B97180056EC34 /* UIFont+FontDescriptorTraits.swift in Sources */,
 				822205431EC3C073001C2998 /* WalletItemStore.swift in Sources */,
 				825522291E6B97B50056EC34 /* PWConstraint.swift in Sources */,

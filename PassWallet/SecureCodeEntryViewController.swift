@@ -147,7 +147,7 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
         pinPromptFooterLabelView.text = ""
         pinPromptFooterLabelView.textAlignment = .center
         pinPromptFooterLabelView.textColor = UIColor.white
-        pinPromptFooterLabelView.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+        pinPromptFooterLabelView.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         
         //Configure pin footer container
         pinPromptFooterLabelContainerView.backgroundColor = pwStyle.errorBackgroundColor
@@ -157,7 +157,7 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
         
         //Configure pin headerView
         pinPromptHeaderLabelView.backgroundColor = UIColor.clear
-        pinPromptHeaderLabelView.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+        pinPromptHeaderLabelView.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         pinPromptHeaderLabelView.text = secureCodeEntryStateMachine.currentState.title(withContext: secureCodeEntryStateMachine.stateMachineContext, withType: secureCodeEntryType)
         
         pinEntryTextField.delegate = self

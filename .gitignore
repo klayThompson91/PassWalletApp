@@ -11,3 +11,6 @@
 *.pbxuser
 *.xcuserdatad/
 *.xcscmblueprint
+
+# Carthage
+Carthage/

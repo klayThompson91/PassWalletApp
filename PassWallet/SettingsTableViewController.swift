@@ -153,9 +153,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
                 userPreferencesService.restoreStandardPreferences()
                 tableView.reloadSections(IndexSet([0, 1]), with: .fade)
             } else if indexPath.row == 1 {
-                let alertController = UIAlertController(title: "Are you sure?", message: "By tapping yes you will delete all your passwords in PassWallet. These can not be recovered again.", preferredStyle: .alert)
-                
-                alertController.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] (_) in
+                let alertController = AlertControllerFactory.clearAllItemsAlert(.genericPasswords) { [weak self] (_) in
                     if let strongSelf = self {
                         let currentPassword = PWCredentials().currentPassword
                         let currentSalt = PWCredentials().currentSalt
@@ -170,23 +168,18 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
                         WalletItemStore.shared.itemType = currentItemStoreType
                         NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
                     }
-                }))
-                
-                alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                }
                 self.present(alertController, animated: true, completion: nil)
             } else {
-                
-                let alertController = UIAlertController(title: "Are you sure?", message: "By tapping yes you will delete all your secure notes in PassWallet. These can not be recovered again.", preferredStyle: .alert)
-                
-                alertController.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
-                    let currentItemStoreType = WalletItemStore.shared.itemType
-                    WalletItemStore.shared.itemType = .secureNotes
-                    let _ = WalletItemStore.shared.clear()
-                    WalletItemStore.shared.itemType = currentItemStoreType
-                    NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
-                }))
-                
-                alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                let alertController = AlertControllerFactory.clearAllItemsAlert(.secureNotes) { [weak self] (_) in
+                    if let _ = self {
+                        let currentItemStoreType = WalletItemStore.shared.itemType
+                        WalletItemStore.shared.itemType = .secureNotes
+                        let _ = WalletItemStore.shared.clear()
+                        WalletItemStore.shared.itemType = currentItemStoreType
+                        NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
+                    }
+                }
                 self.present(alertController, animated: true, completion: nil)
             }
         } else if indexPath.section == 0 {

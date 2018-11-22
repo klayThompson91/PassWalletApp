@@ -44,15 +44,15 @@ public class PWAppearance : NSObject
         UIApplication.shared.statusBarStyle = .lightContent
         errorBackgroundColor = UIColor(colorLiteralRed: 190/255, green: 30/255, blue: 30/255, alpha: 1)
         headerFontColor = UIColor.white
-        headerFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightSemibold)
+        headerFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightSemibold)
         
         tabBarBackgroundColor = UIColor(colorLiteralRed: 250/255, green: 250/255, blue: 250/255, alpha: 0.9)
         tabBarItemFontColor = UIColor(colorLiteralRed: 146/255, green: 146/255, blue: 146/255, alpha: 1)
-        tabBarItemFont = UIFont.systemFont(ofSize: 13, weight: UIFontWeightRegular)
+        tabBarItemFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
         
         tableViewBackgroundColor = UIColor(colorLiteralRed: 239/255, green: 244/255, blue: 243/255, alpha: 1)
         tableViewCellLabelFont = UIFont.systemFont(ofSize: 17, weight: UIFontWeightRegular)
-        tableViewHeaderFont = UIFont.systemFont(ofSize: 13, weight: UIFontWeightSemibold)
+        tableViewHeaderFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightSemibold)
         
         appThemeColor = UIColor(colorLiteralRed: 0/255, green: 168/255, blue: 128/255, alpha: 1)
         appThemeColorWhenSelected = UIColor(colorLiteralRed: 0/255, green: 168/255, blue: 128/255, alpha: 0.3)

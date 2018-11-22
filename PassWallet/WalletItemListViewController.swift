@@ -97,18 +97,7 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
             return
         }
         
-        if selectedWalletItem.itemType != .secureNotes, let selectedWalletKeychainItem = selectedWalletItem.keychainItem as? PasswordKeychainItem {
-            if keychainService.contains(passwordKeychainItem: selectedWalletKeychainItem) {
-                var error: NSError? = NSError()
-                if let passwordInKeychain = keychainService.getStringValueFor(passwordKeychainItem: selectedWalletKeychainItem, error: &error) as String? {
-                    selectedWalletKeychainItem.password = passwordInKeychain
-                }
-            }
-        }
-        
-        let passwordEditVC = WalletItemEditViewController(walletItem: selectedWalletItem, selectedIndexPath: indexPath)
-        navigationController?.pushViewController(passwordEditVC, animated: true)
-        passwordEditVC.isEditing = false
+        routeToWalletItemEditViewController(selectedWalletItem, indexPath)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -152,7 +141,7 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         return cell
     }
     
-    public func moreActionsButtonWasTapped(for walletItem: WalletItem, button: UIButton) {
+    public func moreActionsButtonWasTapped(for walletItem: WalletItem, cell: PasswordSummaryCardCellView) {
         
         var error: NSError? = NSError()
         var title = ""
@@ -168,6 +157,14 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         }
         
         let moreActionsAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        moreActionsAlert.addAction(UIAlertAction(title: "Edit", style: .default, handler: { [weak self] (_) in
+            if let strongSelf = self {
+                if let selectedIndexPath = strongSelf.collectionView.indexPath(for: cell) {
+                    strongSelf.routeToWalletItemEditViewController(walletItem, selectedIndexPath)
+                }
+            }
+        }))
         
         if walletItem.itemType != .secureNotes {
             if walletItem.itemType == .webPasswords, let internetPasswordKeychainItem = walletItem.keychainItem as? InternetPasswordKeychainItem {
@@ -195,21 +192,27 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         
         moreActionsAlert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] (_) in
             if let strongSelf = self {
-                var walletItems = strongSelf.walletItemStore.items
-                walletItems = walletItems?.filter { !($0.isEqual(walletItem)) }
-                if let unwrappedWalletItems = walletItems {
-                    let _ = strongSelf.walletItemStore.save(unwrappedWalletItems)
+                let confirmationAlert = AlertControllerFactory.deleteWalletItemAlert(walletItem.itemType) { [weak self] (_) in
+                    if let strongSelf = self {
+                        var walletItems = strongSelf.walletItemStore.items
+                        walletItems = walletItems?.filter { !($0.isEqual(walletItem)) }
+                        if let unwrappedWalletItems = walletItems {
+                            let _ = strongSelf.walletItemStore.save(unwrappedWalletItems)
+                        }
+                        
+                        if walletItem.itemType != .secureNotes, let keychainItem = walletItem.keychainItem {
+                            let _ = strongSelf.keychainService.delete(passwordKeychainItem: keychainItem as! PasswordKeychainItem, error: &error)
+                        }
+                        self?.walletItemsDidChange(Notification.init(name: Notification.Name.init("walletItemsChangedNotification")))
+                    }
                 }
-                
-                if walletItem.itemType != .secureNotes, let keychainItem = walletItem.keychainItem {
-                    let _ = strongSelf.keychainService.delete(passwordKeychainItem: keychainItem as! PasswordKeychainItem, error: &error)
-                }
-                self?.walletItemsDidChange(Notification.init(name: Notification.Name.init("walletItemsChangedNotification")))
+                strongSelf.present(confirmationAlert, animated: true, completion: nil)
+
             }
         }))
         
         moreActionsAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        moreActionsAlert.popoverPresentationController?.sourceView = button
+        moreActionsAlert.popoverPresentationController?.sourceView = cell
         self.present(moreActionsAlert, animated: true, completion: nil)
     }
     
@@ -283,6 +286,22 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         emptyWalletMessageLabel.textAlignment = .center
         emptyWalletMessageLabel.textColor = UIColor(colorLiteralRed: 0.427451, green: 0.427451, blue: 0.447059, alpha: 1)
         emptyWalletMessageLabel.font = UIFont.systemFont(ofSize: 16)
+    }
+    
+    private func routeToWalletItemEditViewController(_ selectedWalletItem: WalletItem, _ indexPath: IndexPath)
+    {
+        if selectedWalletItem.itemType != .secureNotes, let selectedWalletKeychainItem = selectedWalletItem.keychainItem as? PasswordKeychainItem {
+            if keychainService.contains(passwordKeychainItem: selectedWalletKeychainItem) {
+                var error: NSError? = NSError()
+                if let passwordInKeychain = keychainService.getStringValueFor(passwordKeychainItem: selectedWalletKeychainItem, error: &error) as String? {
+                    selectedWalletKeychainItem.password = passwordInKeychain
+                }
+            }
+        }
+        
+        let passwordEditVC = WalletItemEditViewController(walletItem: selectedWalletItem, selectedIndexPath: indexPath)
+        navigationController?.pushViewController(passwordEditVC, animated: true)
+        passwordEditVC.isEditing = false
     }
     
     deinit
