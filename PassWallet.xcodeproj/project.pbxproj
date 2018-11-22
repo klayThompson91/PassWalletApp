@@ -75,6 +75,8 @@
 		B512C81C20E2B90A0059BB58 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B512C81B20E2B90A0059BB58 /* StoreKit.framework */; };
 		B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */; };
 		B5512FEB21A227E8000D6BF7 /* AlertControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */; };
+		B55E453221A72FEA0070F2FD /* CryptoSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = B55E453121A72FEA0070F2FD /* CryptoSwift.framework.dSYM */; };
+		B55E453421A72FF70070F2FD /* Whisper.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = B55E453321A72FF70070F2FD /* Whisper.framework.dSYM */; };
 		B5DAE81021A2681100077A53 /* ExpandedTapAreaButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAE80F21A2681100077A53 /* ExpandedTapAreaButton.swift */; };
 		B5EE9C9F20DD6D5B00D8957B /* WalletItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +109,17 @@
 				823AF5C71EE3F0EF00CDC7C5 /* Whisper.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B55E453021A72FB90070F2FD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				B55E453221A72FEA0070F2FD /* CryptoSwift.framework.dSYM in CopyFiles */,
+				B55E453421A72FF70070F2FD /* Whisper.framework.dSYM in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -191,6 +204,8 @@
 		B512C81B20E2B90A0059BB58 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItemReEncryptor.swift; sourceTree = "<group>"; };
 		B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertControllerFactory.swift; sourceTree = "<group>"; };
+		B55E453121A72FEA0070F2FD /* CryptoSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CryptoSwift.framework.dSYM; path = Carthage/Build/iOS/CryptoSwift.framework.dSYM; sourceTree = "<group>"; };
+		B55E453321A72FF70070F2FD /* Whisper.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Whisper.framework.dSYM; path = Carthage/Build/iOS/Whisper.framework.dSYM; sourceTree = "<group>"; };
 		B5DAE80F21A2681100077A53 /* ExpandedTapAreaButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedTapAreaButton.swift; sourceTree = "<group>"; };
 		B5EE9C9E20DD6D5B00D8957B /* WalletItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -391,6 +406,8 @@
 		82ED9FF41E21C21C0071FBCA = {
 			isa = PBXGroup;
 			children = (
+				B55E453321A72FF70070F2FD /* Whisper.framework.dSYM */,
+				B55E453121A72FEA0070F2FD /* CryptoSwift.framework.dSYM */,
 				82ED9FFF1E21C21C0071FBCA /* PassWallet */,
 				82EDA0141E21C21D0071FBCA /* PassWalletTests */,
 				82EDA01F1E21C21D0071FBCA /* PassWalletUITests */,
@@ -476,6 +493,8 @@
 				82ED9FFA1E21C21C0071FBCA /* Frameworks */,
 				82ED9FFB1E21C21C0071FBCA /* Resources */,
 				823AF5C81EE3F0EF00CDC7C5 /* Embed Frameworks */,
+				B55E452F21A72B770070F2FD /* ShellScript */,
+				B55E453021A72FB90070F2FD /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -603,6 +622,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B55E452F21A72B770070F2FD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Whisper.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CryptoSwift.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Whisper.framework",
+				"$(DERIVED_FILE_DIR)/CryptoSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		82ED9FF91E21C21C0071FBCA /* Sources */ = {
