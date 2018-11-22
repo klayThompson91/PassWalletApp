@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public protocol PasswordSummaryCardCellViewDelegate: class {
-    func moreActionsButtonWasTapped(for walletItem: WalletItem, button: UIButton)
+    func moreActionsButtonWasTapped(for walletItem: WalletItem, cell: PasswordSummaryCardCellView)
 }
 
 public class PasswordSummaryCardCellView : CardCellView {
@@ -26,7 +26,7 @@ public class PasswordSummaryCardCellView : CardCellView {
     public private(set) var titleLabel = UILabel(frame: .zero)
     public private(set) var subtitleLabel = UILabel(frame: .zero)
     public private(set) var passwordTypeImageView = UIImageView(frame: .zero)
-    public private(set) var moreActionsButton = UIButton(type: .custom)
+    public private(set) var moreActionsButton = ExpandedTapAreaButton(expandedTapAreaEdgeInsets: UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15), frame: .zero)
     
     private var titleLabelTopConstraint = NSLayoutConstraint()
     private var titleLabelCenterConstraint = NSLayoutConstraint()
@@ -56,12 +56,14 @@ public class PasswordSummaryCardCellView : CardCellView {
         
         self.titleLabel.numberOfLines = 1
         self.titleLabel.textColor = UIColor.black
-        self.titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        self.titleLabel.font = UIFont.systemFont(ofSize: 18)
         self.titleLabel.adjustsFontForContentSizeCategory = true
+        
         self.subtitleLabel.numberOfLines = 1
         self.subtitleLabel.textColor = UIColor(colorLiteralRed: 100/255, green: 110/255, blue: 105/255, alpha: 1.0)
-        self.subtitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+        self.subtitleLabel.font = UIFont.systemFont(ofSize: 14)
         self.subtitleLabel.adjustsFontForContentSizeCategory = true
+        
         self.moreActionsButton.addTarget(self, action: #selector(handleMoreActionsButtonTap(_ :)), for: .touchUpInside)
         
         self.addSubviews([titleLabel, subtitleLabel, passwordTypeImageView, moreActionsButton])
@@ -74,7 +76,7 @@ public class PasswordSummaryCardCellView : CardCellView {
     
     @objc private func handleMoreActionsButtonTap(_ sender: UIButton) {
         if let observer = delegate {
-            observer.moreActionsButtonWasTapped(for: walletItem, button: sender)
+            observer.moreActionsButtonWasTapped(for: walletItem, cell: self)
         }
     }
     

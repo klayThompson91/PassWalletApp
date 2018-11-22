@@ -229,18 +229,23 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
     }
     
     @objc private func deleteButtonPressed(_ sender: UIBarButtonItem) {
-        var error: NSError? = NSError()
-        var walletItems = WalletItemStore.shared.items
-        walletItems = walletItems?.filter { !($0.isEqual(currentWalletItem)) }
-        if let unwrappedWalletItems = walletItems {
-            let _ = WalletItemStore.shared.save(unwrappedWalletItems)
+        let confirmationAlert = AlertControllerFactory.deleteWalletItemAlert(currentWalletItem.itemType) { [weak self] (_) in
+            if let strongSelf = self {
+                var error: NSError? = NSError()
+                var walletItems = WalletItemStore.shared.items
+                walletItems = walletItems?.filter { !($0.isEqual(strongSelf.currentWalletItem)) }
+                if let unwrappedWalletItems = walletItems {
+                    let _ = WalletItemStore.shared.save(unwrappedWalletItems)
+                }
+                
+                if strongSelf.currentWalletItem.itemType != .secureNotes, let passwordToDelete = strongSelf.currentWalletItem.keychainItem as? PasswordKeychainItem {
+                    let _ = strongSelf.keychain.delete(passwordKeychainItem: passwordToDelete, error: &error)
+                }
+                NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
+                strongSelf.navigationController?.popViewController(animated: true)
+            }
         }
-        
-        if currentWalletItem.itemType != .secureNotes, let passwordToDelete = currentWalletItem.keychainItem as? PasswordKeychainItem {
-            let _ = keychain.delete(passwordKeychainItem: passwordToDelete, error: &error)
-        }
-        NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))
-        navigationController?.popViewController(animated: true)
+        self.present(confirmationAlert, animated: true, completion: nil)
     }
     
     @objc private func editablePasswordCardViewTapped(_ sender: UITapGestureRecognizer) {
@@ -346,7 +351,7 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
                     currentKeychainItem = InternetPasswordKeychainItem(password: fields[2].textField.text ?? "", accountName: fields[1].textField.text ?? "", website: webURL)
                 } else {
                     //display error alert
-                    let alertController = UIAlertController(title: "Invalid Website URL", message: "You entered an invalid website URL, please correct it and try saving again. Website URL's should be of the form \"google.com\" or \"http://www.google.com\". Consider copying the URL from a web browser.", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "Invalid Website URL", message: "You entered an invalid website URL, please correct it and try saving again. Website URL's    be of the form \"google.com\" or \"http://www.google.com\". Consider copying the URL from a web browser.", preferredStyle: .alert)
                     alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                     self.present(alertController, animated: true, completion: nil)
                 }

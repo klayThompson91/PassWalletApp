@@ -23,8 +23,8 @@ public class TabBarItemFactory {
         tabBarItem.image = unselectedImage
         tabBarItem.selectedImage = selectedImage
         
-        let unselectedTitleTextAttributes = [NSForegroundColorAttributeName : unselectedAppearance.fontColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
-        let selectedTitleTextAttributes = [NSForegroundColorAttributeName : selectedAppearance.fontColor, NSFontAttributeName : UIFont.systemFont(ofSize: 12)]
+        let unselectedTitleTextAttributes = [NSForegroundColorAttributeName : unselectedAppearance.fontColor, NSFontAttributeName : UIFont.systemFont(ofSize: 13)]
+        let selectedTitleTextAttributes = [NSForegroundColorAttributeName : selectedAppearance.fontColor, NSFontAttributeName : UIFont.systemFont(ofSize: 13)]
         tabBarItem.setTitleTextAttributes(unselectedTitleTextAttributes, for: .normal)
         tabBarItem.setTitleTextAttributes(selectedTitleTextAttributes, for: .selected)
         return tabBarItem

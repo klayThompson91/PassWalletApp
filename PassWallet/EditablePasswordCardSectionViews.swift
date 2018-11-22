@@ -25,11 +25,11 @@ public class EditableMultiLineSectionView: UIView, UITextViewDelegate {
         super.init(frame: frame)
         titleLabel.numberOfLines = 1
         titleLabel.textColor = UIColor(colorLiteralRed: 145/255, green: 155/255, blue: 150/255, alpha: 1.0)
-        titleLabel.font = UIFont.systemFont(ofSize: 14)
+        titleLabel.font = UIFont.systemFont(ofSize: 15)
         titleLabel.isUserInteractionEnabled = true
         textView.isScrollEnabled = false
         textView.backgroundColor = UIColor.clear
-        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.font = UIFont.systemFont(ofSize: 17)
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.delegate = self
         addSubviews([titleLabel, textView])
@@ -136,11 +136,11 @@ public class EditableFieldSectionView: UIView {
         super.init(frame: frame)
         titleLabel.numberOfLines = 1
         titleLabel.textColor = UIColor(colorLiteralRed: 145/255, green: 155/255, blue: 150/255, alpha: 1.0)
-        titleLabel.font = UIFont.systemFont(ofSize: 14)
+        titleLabel.font = UIFont.systemFont(ofSize: 15)
         titleLabel.isUserInteractionEnabled = true
-        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.font = UIFont.systemFont(ofSize: 17)
         supplementaryButton.backgroundColor = UIColor.clear
-        supplementaryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
+        supplementaryButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
         supplementaryButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColor, for: .normal)
         supplementaryButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColorWhenSelected, for: .highlighted)
         dividerView.backgroundColor = UIColor(colorLiteralRed: 216/255, green: 216/255, blue: 216/255, alpha: 1.0)
