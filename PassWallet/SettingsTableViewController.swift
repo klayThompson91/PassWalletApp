@@ -265,7 +265,7 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
     @objc private func autoLockSegmentedControlValueDidChange(_ segmentedControl: UISegmentedControl)
     {
         if segmentedControl.selectedSegmentIndex == 0 {
-            userPreferencesService.updateAutoLockTimeout(timeout: .thirtySeconds)
+        userPreferencesService.updateAutoLockTimeout(timeout: .thirtySeconds)
         } else {
             userPreferencesService.updateAutoLockTimeout(timeout: .twoMinutes)
         }
