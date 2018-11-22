@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Fabric
+import Crashlytics
 
 class AppDelegate: UIResponder, UIApplicationDelegate, ClientDependency, LoginViewControllerDelegate {
 
@@ -25,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ClientDependency, LoginVi
     /// MARK: Application Lifecycle Events
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        Fabric.with([Crashlytics.self])
         NotificationCenter.default.addObserver(self, selector: #selector(handleAutoLockTimerFired(_:)), name: AutoLockTimeoutNotification, object: nil)
         let diContainer = Container.sharedContainer
         if diContainer.containerContext == .application {

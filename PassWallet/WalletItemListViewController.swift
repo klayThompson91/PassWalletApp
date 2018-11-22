@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import StoreKit
 
+
 public class WalletItemListViewController : ClientDependencyViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PasswordSummaryCardCellViewDelegate {
 
     public var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -92,7 +93,6 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         guard let selectedWalletItem = walletItemStore.items?[indexPath.row] else {
             return
         }
