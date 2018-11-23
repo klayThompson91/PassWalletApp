@@ -64,7 +64,7 @@ public enum SecureCodeEntryState: Int
         case .enterSecureCode:
             return (context == .authenticate) ? "Enter your \(typeStr)" : "Enter your old \(typeStr)"
         case .setSecureCode:
-            return (context == .setupSecureCode) ? "Enter a \(typeStr) to use with PassWallet." : "Enter your new \(typeStr)"
+            return (context == .setupSecureCode) ? "Enter a \(typeStr) to use with PassWallet.\nChoose a \(typeStr) different than your iPhone lock screen \(typeStr)." : "Enter your new \(typeStr).\nChoose a \(typeStr) different than your iPhone lock screen \(typeStr)."
         case .verifySecureCode:
             return "Verify your new \(typeStr)"
         default:

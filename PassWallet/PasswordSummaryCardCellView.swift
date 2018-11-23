@@ -40,6 +40,8 @@ public class PasswordSummaryCardCellView : CardCellView {
         static let internetPasswordImage = UIImage(named: "InternetPassword Icon")
         static let secureNoteImage = UIImage(named: "SecureNote Icon")
         static let moreActionsImage = UIImage(named: "MoreActions Icon")
+        static let revealPasswordImage = UIImage(named: "RevealPassword Icon")
+        static let hidePasswordImage = UIImage(named: "HidePassword Icon")
     }
     
     public override convenience init(frame: CGRect) {

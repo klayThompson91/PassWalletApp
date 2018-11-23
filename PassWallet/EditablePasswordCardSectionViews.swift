@@ -110,27 +110,44 @@ public class EditableMultiLineSectionView: UIView, UITextViewDelegate {
 public class EditableFieldSectionView: UIView {
     
     public override var intrinsicContentSize: CGSize {
-        let lowerHeight = max(textField.intrinsicContentSize.height + dividerView.intrinsicContentSize.height + 1, supplementaryButton.intrinsicContentSize.height)
+        let lowerHeight = max(textField.intrinsicContentSize.height + dividerView.intrinsicContentSize.height + 1, supplementaryCopyButton.intrinsicContentSize.height)
         let subviewHeights = titleLabel.intrinsicContentSize.height + lowerHeight
         return CGSize(width: UIViewNoIntrinsicMetric, height: subviewHeights + 6)
     }
     
     public private(set) var textField = UITextField(frame: .zero)
     public private(set) var titleLabel = UILabel(frame: .zero)
-    public private(set) var supplementaryButton = UIButton(frame: .zero)
+    public private(set) var supplementaryPasswordRevealButton = UIButton(type: .custom)
+    public private(set) var supplementaryCopyButton = UIButton(frame: .zero)
     public private(set) var dividerView = UIView(frame: .zero)
     
-    public var hideSupplementaryButton = false {
+    public var hideSupplementaryCopyButton = false {
         didSet {
-            if hideSupplementaryButton {
-                supplementaryButton.removeFromSuperview()
+            if hideSupplementaryCopyButton {
+                supplementaryCopyButton.removeFromSuperview()
+                setNeedsUpdateConstraints()
+            }
+        }
+    }
+    
+    public var hideSupplementaryPasswordRevealButton = true {
+        didSet {
+            if hideSupplementaryPasswordRevealButton {
+                supplementaryPasswordRevealButton.removeFromSuperview()
                 setNeedsUpdateConstraints()
             }
         }
     }
     
     private var fieldTapGestureRecognizer = UITapGestureRecognizer()
-    private var previouslyAppliedTextFieldLeftAnchorConstraint = [NSLayoutConstraint]()
+    private var textFieldLeftConstraint = NSLayoutConstraint()
+    private var isPasswordRevealed = false
+    
+    
+    private struct Constants {
+        static let revealPasswordImage = UIImage(named: "RevealPassword Icon")
+        static let hidePasswordImage = UIImage(named: "HidePassword Icon")
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -139,12 +156,14 @@ public class EditableFieldSectionView: UIView {
         titleLabel.font = UIFont.systemFont(ofSize: 15)
         titleLabel.isUserInteractionEnabled = true
         textField.font = UIFont.systemFont(ofSize: 17)
-        supplementaryButton.backgroundColor = UIColor.clear
-        supplementaryButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
-        supplementaryButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColor, for: .normal)
-        supplementaryButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColorWhenSelected, for: .highlighted)
+        supplementaryPasswordRevealButton.setImage(Constants.revealPasswordImage, for: .normal)
+        supplementaryPasswordRevealButton.addTarget(self, action: #selector(handlePasswordRevealButtonTap(_ :)), for: .touchUpInside)
+        supplementaryCopyButton.backgroundColor = UIColor.clear
+        supplementaryCopyButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightMedium)
+        supplementaryCopyButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColor, for: .normal)
+        supplementaryCopyButton.setTitleColor(PWAppearance.sharedAppearance.appThemeColorWhenSelected, for: .highlighted)
         dividerView.backgroundColor = UIColor(colorLiteralRed: 216/255, green: 216/255, blue: 216/255, alpha: 1.0)
-        self.addSubviews([titleLabel, textField, supplementaryButton, dividerView])
+        self.addSubviews([titleLabel, textField, supplementaryCopyButton, supplementaryPasswordRevealButton, dividerView])
         setupConstraints()
         
         fieldTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(fieldLabelTapped(_:)))
@@ -156,37 +175,62 @@ public class EditableFieldSectionView: UIView {
     }
     
     public override func updateConstraints() {
-        if hideSupplementaryButton {
-            var updatedTextFieldRightAnchorConstraints = [NSLayoutConstraint]()
-            updatedTextFieldRightAnchorConstraints.append(textField.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20))
-            NSLayoutConstraint.deactivate(previouslyAppliedTextFieldLeftAnchorConstraint)
-            NSLayoutConstraint.activate(updatedTextFieldRightAnchorConstraints)
-        }
+        NSLayoutConstraint.deactivate([textFieldLeftConstraint])
+        textFieldLeftConstraint = generateTextFieldLeftConstraint()
+        NSLayoutConstraint.activate([textFieldLeftConstraint])
         super.updateConstraints()
     }
     
     private func setupConstraints() {
         var constraints = [NSLayoutConstraint]()
-        supplementaryButton.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        supplementaryButton.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
-        PWConstraint.disableAutoresize(forViews: [textField, titleLabel, supplementaryButton, dividerView])
+        supplementaryCopyButton.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
+        supplementaryCopyButton.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
+        supplementaryPasswordRevealButton.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
+        supplementaryPasswordRevealButton.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
+        PWConstraint.disableAutoresize(forViews: [textField, titleLabel, supplementaryPasswordRevealButton, supplementaryCopyButton, dividerView])
         constraints.append(titleLabel.topAnchor.constraint(equalTo: self.topAnchor))
         constraints.append(titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor))
-        constraints.append(supplementaryButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor))
-        constraints.append(supplementaryButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20))
+        constraints.append(supplementaryCopyButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor))
+        constraints.append(supplementaryCopyButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20))
+        constraints.append(supplementaryPasswordRevealButton.centerYAnchor.constraint(equalTo: supplementaryCopyButton.centerYAnchor))
+        constraints.append(supplementaryPasswordRevealButton.rightAnchor.constraint(equalTo: supplementaryCopyButton.leftAnchor, constant: -10))
         constraints.append(textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6))
         constraints.append(textField.leftAnchor.constraint(equalTo: titleLabel.leftAnchor))
-        previouslyAppliedTextFieldLeftAnchorConstraint.append(textField.rightAnchor.constraint(equalTo: supplementaryButton.leftAnchor, constant: -20))
+        textFieldLeftConstraint = generateTextFieldLeftConstraint()
+        constraints.append(textFieldLeftConstraint)
         constraints.append(dividerView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 1))
         constraints.append(dividerView.leftAnchor.constraint(equalTo: textField.leftAnchor))
         constraints.append(dividerView.rightAnchor.constraint(equalTo: self.rightAnchor))
         constraints.append(dividerView.heightAnchor.constraint(equalToConstant: 0.5))
-        NSLayoutConstraint.activate(constraints + previouslyAppliedTextFieldLeftAnchorConstraint)
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    private func generateTextFieldLeftConstraint() -> NSLayoutConstraint
+    {
+        if !hideSupplementaryPasswordRevealButton {
+            return textField.rightAnchor.constraint(equalTo: supplementaryPasswordRevealButton.leftAnchor, constant: -20)
+        } else if !hideSupplementaryCopyButton {
+            return textField.rightAnchor.constraint(equalTo: supplementaryCopyButton.leftAnchor, constant: -20)
+        } else {
+            return textField.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20)
+        }
     }
     
     @objc private func fieldLabelTapped(_ sender: UITapGestureRecognizer) {
         if !textField.isFirstResponder {
             textField.becomeFirstResponder()
+        }
+    }
+    
+    @objc private func handlePasswordRevealButtonTap(_ sender: UIButton) {
+        if !isPasswordRevealed {
+            textField.isSecureTextEntry = false
+            isPasswordRevealed = true
+            supplementaryPasswordRevealButton.setImage(Constants.hidePasswordImage, for: .normal)
+        } else {
+            textField.isSecureTextEntry = true
+            isPasswordRevealed = false
+            supplementaryPasswordRevealButton.setImage(Constants.revealPasswordImage, for: .normal)
         }
     }
     

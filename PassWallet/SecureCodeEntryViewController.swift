@@ -146,6 +146,7 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
         pinPromptFooterLabelView.backgroundColor = UIColor.clear
         pinPromptFooterLabelView.text = ""
         pinPromptFooterLabelView.textAlignment = .center
+        pinPromptFooterLabelView.numberOfLines = 0
         pinPromptFooterLabelView.textColor = UIColor.white
         pinPromptFooterLabelView.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         
@@ -157,6 +158,8 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
         
         //Configure pin headerView
         pinPromptHeaderLabelView.backgroundColor = UIColor.clear
+        pinPromptHeaderLabelView.numberOfLines = 0
+        pinPromptHeaderLabelView.textAlignment = .center
         pinPromptHeaderLabelView.font = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
         pinPromptHeaderLabelView.text = secureCodeEntryStateMachine.currentState.title(withContext: secureCodeEntryStateMachine.stateMachineContext, withType: secureCodeEntryType)
         
@@ -189,6 +192,8 @@ public class SecureCodeEntryViewController : ClientDependencyViewController, Pin
         constraint.addConstraint( pinPromptFooterLabelView.topAnchor.constraint(equalTo: pinEntryTextField.bottomAnchor, constant: -Constants.UI.pinLabelVerticalSpacing))
         constraint.addConstraint( pinPromptHeaderLabelView.centerXAnchor.constraint(equalTo: view.centerXAnchor))
         constraint.addConstraint( pinPromptHeaderLabelView.bottomAnchor.constraint(equalTo: pinEntryTextField.topAnchor, constant: Constants.UI.pinLabelVerticalSpacing))
+        constraint.addConstraint(pinPromptHeaderLabelView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20))
+        constraint.addConstraint(pinPromptHeaderLabelView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20))
         
         constraint.addConstraint( pinPromptFooterLabelContainerView.bottomAnchor.constraint(equalTo: pinPromptFooterLabelView.bottomAnchor, constant: 5.0))
         constraint.addConstraint( pinPromptFooterLabelContainerView.topAnchor.constraint(equalTo: pinPromptFooterLabelView.topAnchor, constant: -5.0))
