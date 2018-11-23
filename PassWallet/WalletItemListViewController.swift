@@ -97,7 +97,7 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
             return
         }
         
-        routeToWalletItemEditViewController(selectedWalletItem, indexPath)
+        routeToWalletItemEditViewController(selectedWalletItem, indexPath, false)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -161,7 +161,7 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         moreActionsAlert.addAction(UIAlertAction(title: "Edit", style: .default, handler: { [weak self] (_) in
             if let strongSelf = self {
                 if let selectedIndexPath = strongSelf.collectionView.indexPath(for: cell) {
-                    strongSelf.routeToWalletItemEditViewController(walletItem, selectedIndexPath)
+                    strongSelf.routeToWalletItemEditViewController(walletItem, selectedIndexPath, true)
                 }
             }
         }))
@@ -282,13 +282,13 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         }
         
         emptyWalletMessageLabel.numberOfLines = 0
-        emptyWalletMessageLabel.text = "Your \(currentItemType.toString()) are currently empty, get started by pressing the plus button on the top right."
+        emptyWalletMessageLabel.text = "Your \(currentItemType.toStringLowerCase()) are currently empty, get started by pressing the plus button on the top right to add a \(currentItemType.toStringSingularLowercase())."
         emptyWalletMessageLabel.textAlignment = .center
         emptyWalletMessageLabel.textColor = UIColor(colorLiteralRed: 0.427451, green: 0.427451, blue: 0.447059, alpha: 1)
         emptyWalletMessageLabel.font = UIFont.systemFont(ofSize: 16)
     }
     
-    private func routeToWalletItemEditViewController(_ selectedWalletItem: WalletItem, _ indexPath: IndexPath)
+    private func routeToWalletItemEditViewController(_ selectedWalletItem: WalletItem, _ indexPath: IndexPath, _ isEditing: Bool)
     {
         if selectedWalletItem.itemType != .secureNotes, let selectedWalletKeychainItem = selectedWalletItem.keychainItem as? PasswordKeychainItem {
             if keychainService.contains(passwordKeychainItem: selectedWalletKeychainItem) {
@@ -301,7 +301,7 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         
         let passwordEditVC = WalletItemEditViewController(walletItem: selectedWalletItem, selectedIndexPath: indexPath)
         navigationController?.pushViewController(passwordEditVC, animated: true)
-        passwordEditVC.isEditing = false
+        passwordEditVC.isEditing = isEditing
     }
     
     deinit

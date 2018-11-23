@@ -37,6 +37,28 @@ public enum WalletItemType: Int
         }
     }
     
+    public func toStringLowerCase() -> String {
+        switch self {
+        case .webPasswords:
+            return "web passwords"
+        case .genericPasswords:
+            return "generic passwords"
+        case .secureNotes:
+            return "secure notes"
+        }
+    }
+    
+    public func toStringSingularLowercase() -> String {
+        switch self {
+        case .webPasswords:
+            return "web password"
+        case .genericPasswords:
+            return "generic password"
+        case .secureNotes:
+            return "secure note"
+        }
+    }
+    
     public func toPasswordKeychainItem() -> PasswordKeychainItem? {
         switch self {
         case .webPasswords:

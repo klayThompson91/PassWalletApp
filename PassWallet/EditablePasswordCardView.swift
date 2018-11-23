@@ -93,11 +93,11 @@ public class EditablePasswordCardView: CardView {
                 let fieldSection = fieldSections?[i]
                 fieldSection?.textField.addTarget(self, action: #selector(fieldSectionTextDidChange(_:)), for: .editingChanged)
                 if i == 0 {
-                    fieldSection?.supplementaryButton.addTarget(self, action: #selector(firstFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
+                    fieldSection?.supplementaryCopyButton.addTarget(self, action: #selector(firstFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
                 } else if i == 1 {
-                    fieldSection?.supplementaryButton.addTarget(self, action: #selector(secondFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
+                    fieldSection?.supplementaryCopyButton.addTarget(self, action: #selector(secondFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
                 } else if i == 2 {
-                    fieldSection?.supplementaryButton.addTarget(self, action: #selector(thirdFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
+                    fieldSection?.supplementaryCopyButton.addTarget(self, action: #selector(thirdFieldSectionSupplementaryButtonPressed(_:)), for: .touchUpInside)
                     break
                 }
             }

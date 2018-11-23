@@ -118,14 +118,30 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
                     }
                     
                     if let _ = unwrappedPassword as? InternetPasswordKeychainItem {
-                        editablePasswordCardView.fieldSections?[i].supplementaryButton.setTitle("copy", for: .normal)
+                        editablePasswordCardView.fieldSections?[i].supplementaryCopyButton.setTitle("copy", for: .normal)
                     } else {
                         if i == 2 {
-                            editablePasswordCardView.fieldSections?[i].supplementaryButton.setTitle("copy", for: .normal)
+                            editablePasswordCardView.fieldSections?[i].supplementaryCopyButton.setTitle("copy", for: .normal)
                         }
                     }
                     
                     editablePasswordCardView.fieldSections?[i].titleLabel.text = editValues.labelValues[i]
+                    
+                    if currentWalletItem.itemType == .webPasswords {
+                        editablePasswordCardView.fieldSections?[i].textField.autocapitalizationType = .none
+                    } else if currentWalletItem.itemType == .genericPasswords && i > 1 {
+                        editablePasswordCardView.fieldSections?[i].textField.autocapitalizationType = .none
+                    }
+                    
+                    if currentWalletItem.itemType == .webPasswords && i == 0 && currentFieldValue.valueType == .placeholder {
+                        editablePasswordCardView.fieldSections?[i].textField.text = "www."
+                    }
+                    
+                    if i == 2 {
+                        editablePasswordCardView.fieldSections?[i].hideSupplementaryPasswordRevealButton = false
+                    } else {
+                        editablePasswordCardView.fieldSections?[i].hideSupplementaryPasswordRevealButton = true
+                    }
                 }
             }
             
@@ -150,6 +166,8 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
                 secureNoteCardView.fieldSections?[0].textField.placeholder = currentFieldValue.value
             }
             secureNoteCardView.fieldSections?[0].titleLabel.text = editValues.labelValues[0]
+            secureNoteCardView.fieldSections?[0].hideSupplementaryPasswordRevealButton = true
+            secureNoteCardView.fieldSections?[0].hideSupplementaryCopyButton = true
         }
         
         secureNoteCardView.iconImageView.image = Constants.secureNoteImage
@@ -381,10 +399,12 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
             for i in 0..<sections.count {
                 let fieldSection = sections[i]
                 UIView.animate(withDuration: 0.25, animations: {
-                    fieldSection.supplementaryButton.alpha = 0.0
+                    fieldSection.supplementaryCopyButton.alpha = 0.0
+                    fieldSection.supplementaryPasswordRevealButton.alpha = 0.0
                 }, completion: { (finishedAnimating) in
                     if finishedAnimating {
-                        fieldSection.hideSupplementaryButton = true
+                        fieldSection.hideSupplementaryPasswordRevealButton = true
+                        fieldSection.hideSupplementaryCopyButton = true
                         self.editablePasswordCardView.securePasswordFieldIfApplicable(false)
                     }
                 })
