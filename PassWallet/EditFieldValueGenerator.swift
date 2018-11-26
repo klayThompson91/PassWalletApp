@@ -23,10 +23,13 @@ public class EditFieldValueGenerator {
     public init(_ keychainItem: KeychainItem?, secureNote: SecureNote) {
         if let internetPassword = keychainItem as? InternetPasswordKeychainItem {
             labelValues = ["Website URL", "Email/Username", "Password", "Secure Note"]
-            fieldValues = fieldValuesFrom(internetPassword, secureNote: secureNote)
+            fieldValues = fieldValuesFrom(internetPassword: internetPassword, secureNote: secureNote)
+        } else if let mobileAppPassword = keychainItem as? MobileAppPasswordKeychainItem {
+            labelValues = ["App Name", "Email/Username", "Password", "Secure Note"]
+            fieldValues = fieldValuesFrom(mobileAppPassword: mobileAppPassword, secureNote: secureNote)
         } else if let genericPassword = keychainItem as? PasswordKeychainItem {
             labelValues = ["Title", "Description", "Password", "Secure Note"]
-            fieldValues = fieldValuesFrom(genericPassword, secureNote: secureNote)
+            fieldValues = fieldValuesFrom(genericPassword: genericPassword, secureNote: secureNote)
         } else {
             labelValues = ["Title", "Secure Note"]
             fieldValues = fieldValuesFrom(secureNote, ignoreTitle: false)
@@ -34,7 +37,7 @@ public class EditFieldValueGenerator {
     }
     
     
-    private func fieldValuesFrom(_ internetPassword: InternetPasswordKeychainItem, secureNote: SecureNote) -> EditFieldValues {
+    private func fieldValuesFrom(internetPassword: InternetPasswordKeychainItem, secureNote: SecureNote) -> EditFieldValues {
         var fieldValuesArray = EditFieldValues()
         
         if internetPassword.website.absoluteString == "passwallet.com" {
@@ -62,7 +65,29 @@ public class EditFieldValueGenerator {
         return fieldValuesArray + fieldValuesFrom(secureNote, ignoreTitle: true)
     }
     
-    private func fieldValuesFrom(_ genericPassword: PasswordKeychainItem, secureNote: SecureNote) -> EditFieldValues {
+    private func fieldValuesFrom(mobileAppPassword: MobileAppPasswordKeychainItem, secureNote: SecureNote) -> EditFieldValues {
+        var fieldValuesArray = EditFieldValues()
+        
+        if !mobileAppPassword.applicationName.isEmpty {
+            fieldValuesArray.append((value: mobileAppPassword.applicationName, valueType: .actual))
+        } else {
+            fieldValuesArray.append((value: labelValues[0], valueType: .placeholder))
+        }
+        if !mobileAppPassword.accountName.isEmpty {
+            fieldValuesArray.append((value: mobileAppPassword.accountName, valueType: .actual))
+        } else {
+            fieldValuesArray.append((value: labelValues[1], valueType: .placeholder))
+        }
+        if !mobileAppPassword.password.isEmpty {
+            fieldValuesArray.append((value: mobileAppPassword.password, valueType: .actual))
+        } else {
+            fieldValuesArray.append((value: labelValues[2], valueType: .placeholder))
+        }
+        
+        return fieldValuesArray + fieldValuesFrom(secureNote, ignoreTitle: true)
+    }
+    
+    private func fieldValuesFrom(genericPassword: PasswordKeychainItem, secureNote: SecureNote) -> EditFieldValues {
         var fieldValuesArray = EditFieldValues()
         
         if !genericPassword.identifier.isEmpty {

@@ -72,6 +72,7 @@
 		82EDA0081E21C21D0071FBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82EDA0071E21C21D0071FBCA /* Assets.xcassets */; };
 		82EDA00B1E21C21D0071FBCA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82EDA0091E21C21D0071FBCA /* LaunchScreen.storyboard */; };
 		82EDA0211E21C21D0071FBCA /* PassWalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82EDA0201E21C21D0071FBCA /* PassWalletUITests.swift */; };
+		B50603BD21A883B4002C46A2 /* MobileAppPasswordKeychainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B50603BC21A883B4002C46A2 /* MobileAppPasswordKeychainItem.m */; };
 		B512C81C20E2B90A0059BB58 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B512C81B20E2B90A0059BB58 /* StoreKit.framework */; };
 		B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */; };
 		B5512FEB21A227E8000D6BF7 /* AlertControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */; };
@@ -203,6 +204,8 @@
 		82EDA01C1E21C21D0071FBCA /* PassWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PassWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82EDA0201E21C21D0071FBCA /* PassWalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassWalletUITests.swift; sourceTree = "<group>"; };
 		82EDA0221E21C21D0071FBCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B50603BB21A883B4002C46A2 /* MobileAppPasswordKeychainItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileAppPasswordKeychainItem.h; sourceTree = "<group>"; };
+		B50603BC21A883B4002C46A2 /* MobileAppPasswordKeychainItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileAppPasswordKeychainItem.m; sourceTree = "<group>"; };
 		B512C81B20E2B90A0059BB58 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B539DD4020E186A3005902D2 /* WalletItemReEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletItemReEncryptor.swift; sourceTree = "<group>"; };
 		B5512FEA21A227E8000D6BF7 /* AlertControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertControllerFactory.swift; sourceTree = "<group>"; };
@@ -484,6 +487,8 @@
 				823A874E1E90670C00E9BD45 /* KeychainItem.m */,
 				82BBDC661E91AF06007A2C3D /* PasswordKeychainItem.h */,
 				82BBDC671E91AF06007A2C3D /* PasswordKeychainItem.m */,
+				B50603BB21A883B4002C46A2 /* MobileAppPasswordKeychainItem.h */,
+				B50603BC21A883B4002C46A2 /* MobileAppPasswordKeychainItem.m */,
 				823A87551E906EC900E9BD45 /* InternetPasswordKeychainItem.h */,
 				823A87561E906EC900E9BD45 /* InternetPasswordKeychainItem.m */,
 			);
@@ -704,6 +709,7 @@
 				82E369F91FD1E6F1008B3732 /* CryptoString.swift in Sources */,
 				B539DD4120E186A3005902D2 /* WalletItemReEncryptor.swift in Sources */,
 				826A46FA1E3ECBBE0055ED3D /* AuthenticationSessionManager.swift in Sources */,
+				B50603BD21A883B4002C46A2 /* MobileAppPasswordKeychainItem.m in Sources */,
 				82C57AA01E2C6B7F0081D6F5 /* SettingsTableViewCellModel.swift in Sources */,
 				823A87571E906EC900E9BD45 /* InternetPasswordKeychainItem.m in Sources */,
 				B5512FEB21A227E8000D6BF7 /* AlertControllerFactory.swift in Sources */,
@@ -891,7 +897,7 @@
 				INFOPLIST_FILE = PassWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = abhaycuram.PassWallet;
+				PRODUCT_BUNDLE_IDENTIFIER = ac.PassWallet.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "PassWallet/PassWallet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -915,7 +921,7 @@
 				INFOPLIST_FILE = PassWallet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = abhaycuram.PassWallet;
+				PRODUCT_BUNDLE_IDENTIFIER = ac.PassWallet.iOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "PassWallet/PassWallet-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

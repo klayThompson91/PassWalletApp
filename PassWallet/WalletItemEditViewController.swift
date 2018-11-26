@@ -41,6 +41,7 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
     
     private struct Constants {
         static let secureNoteImage = UIImage(named: "SecureNote Icon")
+        static let mobileAppPasswordImage = UIImage(named: "MobileAppPassword Icon")
         static let genericPasswordImage = UIImage(named: "GenericPassword Icon")
         static let internetPasswordImage = UIImage(named: "InternetPassword Icon")
     }
@@ -127,7 +128,7 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
                     
                     editablePasswordCardView.fieldSections?[i].titleLabel.text = editValues.labelValues[i]
                     
-                    if currentWalletItem.itemType == .webPasswords {
+                    if currentWalletItem.itemType == .webPasswords || currentWalletItem.itemType == .mobileAppPasswords {
                         editablePasswordCardView.fieldSections?[i].textField.autocapitalizationType = .none
                     } else if currentWalletItem.itemType == .genericPasswords && i > 1 {
                         editablePasswordCardView.fieldSections?[i].textField.autocapitalizationType = .none
@@ -190,6 +191,8 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
     private func fetchImage(for keychainItem: KeychainItem) -> UIImage? {
         if let _ = keychainItem as? InternetPasswordKeychainItem {
             return Constants.internetPasswordImage
+        } else if let _ = keychainItem as? MobileAppPasswordKeychainItem {
+            return Constants.mobileAppPasswordImage
         } else if let _ = keychainItem as? PasswordKeychainItem {
             return Constants.genericPasswordImage
         }
@@ -375,6 +378,8 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
                 }
             } else if currentWalletItem.itemType == .genericPasswords, let fields = editablePasswordCardView.fieldSections {
                 currentKeychainItem = PasswordKeychainItem(password: fields[2].textField.text ?? "", identifier: fields[0].textField.text ?? "", description: fields[1].textField.text ?? "")
+            } else if currentWalletItem.itemType == .mobileAppPasswords, let fields = editablePasswordCardView.fieldSections {
+                currentKeychainItem = MobileAppPasswordKeychainItem(password: fields[2].textField.text ?? "", applicationName: fields[0].textField.text ?? "", accountName: fields[1].textField.text ?? "")
             }
             currentSecureNote = SecureNote(title: "", text: currentSecureNoteText())
         } else {
@@ -472,6 +477,8 @@ public class WalletItemEditViewController : ClientDependencyViewController, Edit
     public func fieldSectionTextFieldsTextDidChange(_ textFields: [UITextField]) {
         var enableSave = true
         if currentWalletItem.itemType == .webPasswords, let _ = currentWalletItem.keychainItem as? InternetPasswordKeychainItem {
+            enableSave = ((textFields[0].text != "") && (textFields[1].text != "") && (textFields[2].text != ""))
+        } else if currentWalletItem.itemType == .mobileAppPasswords, let _ = currentWalletItem.keychainItem as? MobileAppPasswordKeychainItem {
             enableSave = ((textFields[0].text != "") && (textFields[1].text != "") && (textFields[2].text != ""))
         } else if currentWalletItem.itemType == .genericPasswords, let _ = currentWalletItem.keychainItem as? PasswordKeychainItem {
             enableSave = ((textFields[0].text != "") && (textFields[2].text != ""))

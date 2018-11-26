@@ -19,8 +19,9 @@ public class WalletItemMenuViewController : UIViewController, UITableViewDelegat
         static let title = "Wallet"
         static let cellReuseId = "PasswordType-Cell"
         static let cellOneTitle = "Web Passwords"
-        static let cellTwoTitle = "Generic Passwords"
-        static let cellThreeTitle = "Secure Notes"
+        static let cellTwoTitle = "Mobile Passwords"
+        static let cellThreeTitle = "Generic Passwords"
+        static let cellFourTitle = "Secure Notes"
         static let sectionHeader = "PASSWORD TYPES"
     }
     
@@ -72,7 +73,7 @@ public class WalletItemMenuViewController : UIViewController, UITableViewDelegat
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -91,8 +92,10 @@ public class WalletItemMenuViewController : UIViewController, UITableViewDelegat
                 tableViewCell.textLabel?.text = Constants.cellOneTitle
             } else if indexPath.row == 1 {
                 tableViewCell.textLabel?.text = Constants.cellTwoTitle
-            } else {
+            } else if indexPath.row == 2 {
                 tableViewCell.textLabel?.text = Constants.cellThreeTitle
+            } else {
+                tableViewCell.textLabel?.text = Constants.cellFourTitle
             }
             
             

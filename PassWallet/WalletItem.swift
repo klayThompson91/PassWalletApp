@@ -11,12 +11,15 @@ import Foundation
 public enum WalletItemType: Int
 {
     case webPasswords
+    case mobileAppPasswords
     case genericPasswords
     case secureNotes
     
     public init?(typeString: String) {
         if typeString == "Web Passwords" {
             self = .webPasswords
+        } else if typeString == "Mobile Passwords" {
+            self = .mobileAppPasswords
         } else if typeString == "Generic Passwords" {
             self = .genericPasswords
         } else if typeString == "Secure Notes" {
@@ -28,6 +31,8 @@ public enum WalletItemType: Int
     
     public func toString() -> String {
         switch self {
+        case .mobileAppPasswords:
+            return "Mobile Passwords"
         case .webPasswords:
             return "Web Passwords"
         case .genericPasswords:
@@ -39,6 +44,8 @@ public enum WalletItemType: Int
     
     public func toStringLowerCase() -> String {
         switch self {
+        case .mobileAppPasswords:
+            return "mobile passwords"
         case .webPasswords:
             return "web passwords"
         case .genericPasswords:
@@ -50,6 +57,8 @@ public enum WalletItemType: Int
     
     public func toStringSingularLowercase() -> String {
         switch self {
+        case .mobileAppPasswords:
+            return "mobile password"
         case .webPasswords:
             return "web password"
         case .genericPasswords:
@@ -65,6 +74,8 @@ public enum WalletItemType: Int
             return InternetPasswordKeychainItem(password: "", accountName: "", website: URL(string: "passwallet.com")!)
         case .genericPasswords:
             return PasswordKeychainItem(description: "", value: "")
+        case .mobileAppPasswords:
+            return MobileAppPasswordKeychainItem(password: "", applicationName: "", accountName: "")
         case .secureNotes:
             return nil
         }
@@ -96,6 +107,8 @@ public class WalletItem: NSObject, NSCoding {
         self.itemType = decodedItemType
         if self.itemType == .genericPasswords {
             self.keychainItem = aDecoder.decodeObject(forKey: keychainItemKey) as? PasswordKeychainItem
+        } else if self.itemType == .mobileAppPasswords {
+            self.keychainItem = aDecoder.decodeObject(forKey: keychainItemKey) as? MobileAppPasswordKeychainItem
         } else if self.itemType == .webPasswords {
             self.keychainItem = aDecoder.decodeObject(forKey: keychainItemKey) as? InternetPasswordKeychainItem
         }

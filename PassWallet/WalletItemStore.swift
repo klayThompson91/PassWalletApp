@@ -23,6 +23,8 @@ public class WalletItemStore: NSObject {
                 currentStoreFile = walletItemGenericPasswordFileName
             } else if itemType == .webPasswords {
                 currentStoreFile = walletItemInternetPasswordFileName
+            } else if itemType == .mobileAppPasswords {
+                currentStoreFile = walletItemMobileAppPasswordFileName
             } else {
                 currentStoreFile = walletItemSecureNoteFileName
             }
@@ -53,6 +55,12 @@ public class WalletItemStore: NSObject {
                     secureNoteItemsUpdated = false
                 }
                 return _secureNoteItems
+            } else if itemType == .mobileAppPasswords {
+                if mobileAppPasswordItemsUpdated {
+                    _mobileAppPasswordItems = reader.unarchiveObject(withFile: filePath) as? [WalletItem]
+                    mobileAppPasswordItemsUpdated = false
+                }
+                return _mobileAppPasswordItems
             }
             
             return nil
@@ -61,15 +69,18 @@ public class WalletItemStore: NSObject {
     
     private let walletItemInternetPasswordFileName = "PassWallet_internetPasswords"
     private let walletItemGenericPasswordFileName = "PassWallet_genericPasswords"
+    private let walletItemMobileAppPasswordFileName = "PassWallet_mobileAppPasswords"
     private let walletItemSecureNoteFileName = "PassWallet_secureNotes"
     
     private var _webPasswordItems: [WalletItem]?
     private var _genericPasswordItems: [WalletItem]?
     private var _secureNoteItems: [WalletItem]?
+    private var _mobileAppPasswordItems: [WalletItem]?
     
     private var webPasswordItemsUpdated = true
     private var genericPasswordItemsUpdated = true
     private var secureNoteItemsUpdated = true
+    private var mobileAppPasswordItemsUpdated = true
     
     private let fileManager = FileManager.default
     private let writer = NSKeyedArchiver.self
@@ -86,6 +97,7 @@ public class WalletItemStore: NSObject {
             if itemType == .genericPasswords { genericPasswordItemsUpdated = true }
             if itemType == .webPasswords { webPasswordItemsUpdated = true }
             if itemType == .secureNotes { secureNoteItemsUpdated = true }
+            if itemType == .mobileAppPasswords { mobileAppPasswordItemsUpdated = true }
         }
         
         return didSave
@@ -98,6 +110,8 @@ public class WalletItemStore: NSObject {
         if let webPasswordItems = items { let _ = save(webPasswordItems) }
         itemType = .secureNotes
         if let secureNoteItems = items { let _ = save(secureNoteItems) }
+        itemType = .mobileAppPasswords
+        if let mobilePasswordItems = items { let _ = save(mobilePasswordItems) }
     }
     
     public func clear() -> Bool {

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  the current PasswordKeychainItem from other PasswordKeyChainItems in the system.
  If an identifier is not set, we use the passed in itemDescription as the identifier.
  */
-@property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, readonly, copy) NSString *identifier;
 
 - (instancetype)initWithPassword:(NSString *)password
                       identifier:(NSString *)keychainIdentifier;

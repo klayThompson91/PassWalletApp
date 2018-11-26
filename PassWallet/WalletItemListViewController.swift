@@ -112,6 +112,8 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
                 return (webLoginWalletItem.accountName.isEmpty) ? collapsedSize : defaultSize
             } else if currentWalletItem.itemType == .genericPasswords, let passwordWalletItem = currentWalletItem.keychainItem as? PasswordKeychainItem {
                 return (passwordWalletItem.itemDescription.isEmpty) ? collapsedSize : defaultSize
+            } else if currentWalletItem.itemType == .mobileAppPasswords, let passwordWalletItem = currentWalletItem.keychainItem as? MobileAppPasswordKeychainItem {
+                return (passwordWalletItem.accountName.isEmpty) ? collapsedSize : defaultSize
             } else if currentWalletItem.itemType == .secureNotes, let secureNoteWalletItem = currentWalletItem.secureNote {
                 return (secureNoteWalletItem.title.isEmpty) ? collapsedSize : defaultSize
             }
@@ -148,11 +150,11 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
         
         if walletItem.itemType == .secureNotes, let secureNote = walletItem.secureNote {
             title = secureNote.title
-        }
-        if walletItem.itemType == .genericPasswords, let genericPassword = walletItem.keychainItem as? PasswordKeychainItem {
+        } else if walletItem.itemType == .genericPasswords, let genericPassword = walletItem.keychainItem as? PasswordKeychainItem {
             title = genericPassword.identifier
-        }
-        if walletItem.itemType == .webPasswords, let webPassword = walletItem.keychainItem as? InternetPasswordKeychainItem {
+        } else if walletItem.itemType == .mobileAppPasswords, let mobileAppPassword = walletItem.keychainItem as? MobileAppPasswordKeychainItem {
+            title = mobileAppPassword.applicationName
+        } else if walletItem.itemType == .webPasswords, let webPassword = walletItem.keychainItem as? InternetPasswordKeychainItem {
             title = webPassword.website.absoluteString
         }
         
@@ -177,6 +179,15 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
                 moreActionsAlert.addAction(UIAlertAction(title: "Copy email/username", style: .default, handler: { [weak self] (_) in
                     if let strongSelf = self {
                         UIPasteboard.general.string = internetPasswordKeychainItem.accountName
+                        ClipboardWhisper.showCopiedMessage(for: strongSelf.navigationController!)
+                    }
+                }))
+            }
+            
+            if walletItem.itemType == .mobileAppPasswords, let mobileAppPasswordKeychainItem = walletItem.keychainItem as? MobileAppPasswordKeychainItem {
+                moreActionsAlert.addAction(UIAlertAction(title: "Copy email/username", style: .default, handler: { [weak self] (_) in
+                    if let strongSelf = self {
+                        UIPasteboard.general.string = mobileAppPasswordKeychainItem.accountName
                         ClipboardWhisper.showCopiedMessage(for: strongSelf.navigationController!)
                     }
                 }))
@@ -277,6 +288,8 @@ public class WalletItemListViewController : ClientDependencyViewController, UICo
             emptyWalletIconImageView.image = UIImage(named: "LargeInternetPassword Icon")
         } else if currentItemType == .genericPasswords {
             emptyWalletIconImageView.image = UIImage(named: "LargeGenericPassword Icon")
+        } else if currentItemType == .mobileAppPasswords {
+            emptyWalletIconImageView.image = UIImage(named: "LargeMobileAppPassword Icon")
         } else {
             emptyWalletIconImageView.image = UIImage(named: "LargeSecureNote Icon")
         }

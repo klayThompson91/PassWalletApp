@@ -17,10 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface InternetPasswordKeychainItem : PasswordKeychainItem
 
 //The website account or user name
-@property (nonatomic, copy) NSString *accountName;
+@property (nonatomic, readonly, copy) NSString *accountName;
 
 //The website URL
-@property (nonatomic, copy) NSURL *website;
+@property (nonatomic, readonly, copy) NSURL *website;
 
 - (instancetype)initWithPassword:(NSString *)password
                      accountName:(NSString *)accountName
