@@ -8,6 +8,13 @@
 
 #import "InternetPasswordKeychainItem.h"
 
+@interface InternetPasswordKeychainItem ()
+
+@property (nonatomic, readwrite, copy) NSString *accountName;
+@property (nonatomic, readwrite, copy) NSURL *website;
+
+@end
+
 @implementation InternetPasswordKeychainItem
 
 @synthesize key = _key;

@@ -8,6 +8,12 @@
 
 #import "PasswordKeychainItem.h"
 
+@interface PasswordKeychainItem ()
+
+@property (nonatomic, readwrite, copy) NSString *identifier;
+
+@end
+
 @implementation PasswordKeychainItem
 
 @synthesize key = _key, password = _password;

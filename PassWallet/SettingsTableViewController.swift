@@ -159,11 +159,14 @@ public class SettingsTableViewController: ClientDependencyViewController, UITabl
                         let currentSalt = PWCredentials().currentSalt
                         strongSelf.keychainService.clearPasswordKeychainItems()
                         strongSelf.keychainService.clearInternetPasswordKeychainItems()
+                        strongSelf.keychainService.clearAllKeychainItems()
                         PWCredentials().update(password: currentPassword!, salt: currentSalt!)
                         let currentItemStoreType = WalletItemStore.shared.itemType
                         WalletItemStore.shared.itemType = .genericPasswords
                         let _ = WalletItemStore.shared.clear()
                         WalletItemStore.shared.itemType = .webPasswords
+                        let _ = WalletItemStore.shared.clear()
+                        WalletItemStore.shared.itemType = .mobileAppPasswords
                         let _ = WalletItemStore.shared.clear()
                         WalletItemStore.shared.itemType = currentItemStoreType
                         NotificationCenter.default.post(Notification(name: Notification.Name.init("walletItemsChangedNotification")))

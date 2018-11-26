@@ -38,6 +38,7 @@ public class PasswordSummaryCardCellView : CardCellView {
     private struct Constants {
         static let genericPasswordImage = UIImage(named: "GenericPassword Icon")
         static let internetPasswordImage = UIImage(named: "InternetPassword Icon")
+        static let mobileAppPasswordImage = UIImage(named: "MobileAppPassword Icon")
         static let secureNoteImage = UIImage(named: "SecureNote Icon")
         static let moreActionsImage = UIImage(named: "MoreActions Icon")
         static let revealPasswordImage = UIImage(named: "RevealPassword Icon")
@@ -87,7 +88,12 @@ public class PasswordSummaryCardCellView : CardCellView {
             self.titleLabel.text = internetPassword.website.absoluteString
             self.subtitleLabel.text = internetPassword.accountName
             self.passwordTypeImageView.image = Constants.internetPasswordImage
-        } else if newWalletItem.itemType == .genericPasswords, let genericPassword = newWalletItem.keychainItem as? PasswordKeychainItem {
+        } else if newWalletItem.itemType == .mobileAppPasswords, let mobileAppPassword = newWalletItem.keychainItem as? MobileAppPasswordKeychainItem {
+            self.titleLabel.text = mobileAppPassword.applicationName
+            self.subtitleLabel.text = mobileAppPassword.accountName
+            self.passwordTypeImageView.image = Constants.mobileAppPasswordImage
+        }
+        else if newWalletItem.itemType == .genericPasswords, let genericPassword = newWalletItem.keychainItem as? PasswordKeychainItem {
             self.titleLabel.text = genericPassword.identifier
             self.subtitleLabel.text = genericPassword.itemDescription
             self.passwordTypeImageView.image = Constants.genericPasswordImage
